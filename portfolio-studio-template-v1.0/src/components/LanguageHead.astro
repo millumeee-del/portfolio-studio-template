@@ -1,0 +1,13 @@
+---
+import {site} from '../data/site.js';
+import {bootSiteLanguage,SITE_LANGUAGE_PAIRS} from '../lib/site-language.js';
+import {readTranslationCatalog} from '../lib/translation-catalog.server.js';
+import {readHomeLayouts} from '../lib/home-layout.server.js';
+import {headerLayoutCSS} from '../lib/header-layout.js';
+import {normalizeTranslationScope} from '../lib/scoped-translations.js';
+const scope=normalizeTranslationScope(Astro.url.pathname);
+const script='('+bootSiteLanguage.toString()+')('+JSON.stringify({scope,catalog:readTranslationCatalog(scope),pairs:SITE_LANGUAGE_PAIRS}).replace(/</g,'\\u003c')+');';
+---
+<meta name="application-name" content={site.name} />
+<style is:inline data-header-saved set:html={headerLayoutCSS(readHomeLayouts())} />
+<script is:inline set:html={script} />

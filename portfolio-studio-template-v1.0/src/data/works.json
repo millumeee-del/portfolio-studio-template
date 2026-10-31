@@ -1,0 +1,192 @@
+[
+  {
+    "slug": "sample-1",
+    "category": "motion-design",
+    "title": "动态练习",
+    "titleEn": "Motion Study",
+    "studio": "DEMO STUDIO",
+    "year": "2026",
+    "cover": "/demo/project-1.png",
+    "aspectRatio": "4 / 3",
+    "layoutMode": "canvas",
+    "canvasWidth": 1000,
+    "blocks": [
+      {
+        "id": "intro",
+        "type": "text",
+        "text": "这是示例项目。你可以编辑文字、替换图片，并拖动各个内容框。",
+        "fontSize": 20,
+        "layout": {
+          "x": 80,
+          "y": 0,
+          "width": 840,
+          "height": 100
+        }
+      },
+      {
+        "id": "image",
+        "type": "image",
+        "src": "/demo/project-1.png",
+        "fit": "contain",
+        "layout": {
+          "x": 80,
+          "y": 150,
+          "width": 840,
+          "height": 630
+        }
+      }
+    ]
+  },
+  {
+    "slug": "sample-2",
+    "category": "touchdesigner",
+    "title": "实时图形",
+    "titleEn": "Realtime Graphics",
+    "studio": "DEMO STUDIO",
+    "year": "2026",
+    "cover": "/demo/project-2.png",
+    "aspectRatio": "4 / 3",
+    "layoutMode": "canvas",
+    "canvasWidth": 1000,
+    "blocks": [
+      {
+        "id": "intro",
+        "type": "text",
+        "text": "这是示例项目。你可以编辑文字、替换图片，并拖动各个内容框。",
+        "fontSize": 20,
+        "layout": {
+          "x": 80,
+          "y": 0,
+          "width": 840,
+          "height": 100
+        }
+      },
+      {
+        "id": "image",
+        "type": "image",
+        "src": "/demo/project-2.png",
+        "fit": "contain",
+        "layout": {
+          "x": 80,
+          "y": 150,
+          "width": 840,
+          "height": 630
+        }
+      }
+    ]
+  },
+  {
+    "slug": "sample-3",
+    "category": "character-design",
+    "title": "几何角色",
+    "titleEn": "Geometric Character",
+    "studio": "DEMO STUDIO",
+    "year": "2026",
+    "cover": "/demo/project-3.png",
+    "aspectRatio": "4 / 3",
+    "layoutMode": "canvas",
+    "canvasWidth": 1000,
+    "blocks": [
+      {
+        "id": "intro",
+        "type": "text",
+        "text": "这是示例项目。你可以编辑文字、替换图片，并拖动各个内容框。",
+        "fontSize": 20,
+        "layout": {
+          "x": 80,
+          "y": 0,
+          "width": 840,
+          "height": 100
+        }
+      },
+      {
+        "id": "image",
+        "type": "image",
+        "src": "/demo/project-3.png",
+        "fit": "contain",
+        "layout": {
+          "x": 80,
+          "y": 150,
+          "width": 840,
+          "height": 630
+        }
+      }
+    ]
+  },
+  {
+    "slug": "sample-4",
+    "category": "glsl-shaders",
+    "title": "生成图形",
+    "titleEn": "Generative Shapes",
+    "studio": "DEMO STUDIO",
+    "year": "2026",
+    "cover": "/demo/project-4.png",
+    "aspectRatio": "4 / 3",
+    "layoutMode": "canvas",
+    "canvasWidth": 1000,
+    "blocks": [
+      {
+        "id": "intro",
+        "type": "text",
+        "text": "这是示例项目。你可以编辑文字、替换图片，并拖动各个内容框。",
+        "fontSize": 20,
+        "layout": {
+          "x": 80,
+          "y": 0,
+          "width": 840,
+          "height": 100
+        }
+      },
+      {
+        "id": "image",
+        "type": "image",
+        "src": "/demo/project-4.png",
+        "fit": "contain",
+        "layout": {
+          "x": 80,
+          "y": 150,
+          "width": 840,
+          "height": 630
+        }
+      }
+    ]
+  },
+  {
+    "slug": "sample-5",
+    "category": "live-visual",
+    "title": "现场视觉",
+    "titleEn": "Live Visuals",
+    "studio": "DEMO STUDIO",
+    "year": "2026",
+    "cover": "/demo/project-5.png",
+    "aspectRatio": "4 / 3",
+    "layoutMode": "canvas",
+    "canvasWidth": 1000,
+    "blocks": [
+      {
+        "id": "intro",
+        "type": "text",
+        "text": "这是示例项目。你可以编辑文字、替换图片，并拖动各个内容框。",
+        "fontSize": 20,
+        "layout": {
+          "x": 80,
+          "y": 0,
+          "width": 840,
+          "height": 100
+        }
+      },
+      {
+        "id": "image",
+        "type": "image",
+        "src": "/demo/project-5.png",
+        "fit": "contain",
+        "layout": {
+          "x": 80,
+          "y": 150,
+          "width": 840,
+          "height": 630
+        }
+      }
+    ]
+  }
+]

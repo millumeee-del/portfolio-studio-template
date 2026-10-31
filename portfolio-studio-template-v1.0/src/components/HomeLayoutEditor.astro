@@ -1,0 +1,43 @@
+---
+import '../styles/home-layout-editor.css';
+---
+<section class="home-layout-editor" data-home-layout-editor aria-label="首页排版编辑器">
+  <button type="button" class="home-layout-entry" data-home-layout-open>编辑首页排版</button>
+  <div class="home-layout-toolbar" data-home-layout-toolbar hidden>
+    <strong data-home-layout-device>首页排版</strong>
+    <button type="button" data-home-layout-mobile>手机预览</button>
+    <button type="button" data-home-layout-undo disabled>撤销</button>
+    <button type="button" data-home-layout-reset>恢复默认</button>
+    <button type="button" data-home-layout-cancel>退出编辑</button>
+    <button type="button" data-home-layout-save>保存排版</button>
+    <div class="home-layout-fields">
+      <span data-home-layout-selected>选择一个框</span>
+      <label>X <input type="number" step="1" data-home-layout-input="x" /></label>
+      <label>Y <input type="number" step="1" data-home-layout-input="y" /></label>
+      <label>宽 <input type="number" min="48" step="1" data-home-layout-input="width" /></label>
+      <label>高 <input type="number" min="48" step="1" data-home-layout-input="height" /></label>
+    </div>
+    <div class="home-layout-fields header-layout-fields" data-header-fields data-no-translate hidden>
+      <strong>全站顶部</strong>
+      <select aria-label="顶部组件" data-header-select><option value="">选择顶部组件</option></select>
+      <label>X <input type="number" step="1" data-header-input="x" /></label>
+      <label>Y <input type="number" step="1" data-header-input="y" /></label>
+      <label>缩放 <input type="number" min=".25" max="4" step=".05" data-header-input="scale" /></label>
+      <label>字号 <input type="number" min="6" max="100" step="1" data-header-input="fontSize" /></label>
+      <label>间距 <input type="number" min="0" max="200" step="1" data-header-input="gap" /></label>
+      <button type="button" data-header-reset>顶部恢复默认</button>
+    </div>
+    <p role="status" data-home-layout-status>拖动框移动，拖右下角缩放；顶部组件可设置字号和间距。按 Alt 暂停吸附。</p>
+  </div>
+  <div class="home-mobile-preview" data-home-mobile-preview hidden>
+    <header><strong>手机排版预览</strong><select aria-label="手机预览宽度" data-home-mobile-width><option value="320">320px</option><option value="390" selected>390px</option><option value="430">430px</option></select><button type="button" data-home-mobile-close>关闭预览</button></header>
+    <div data-home-mobile-frame></div>
+  </div>
+</section>
+<script>
+  import {mountHomeLayoutEditor} from '../scripts/home-layout-editor.js';
+  let dispose: (()=>void)|undefined;
+  function initialize(){dispose?.();const host=document.querySelector<HTMLElement>('[data-home-layout-editor]');dispose=host?mountHomeLayoutEditor(host):undefined;}
+  initialize();document.addEventListener('astro:page-load',initialize);
+  if(import.meta.hot)import.meta.hot.dispose(()=>{dispose?.();document.removeEventListener('astro:page-load',initialize);});
+</script>

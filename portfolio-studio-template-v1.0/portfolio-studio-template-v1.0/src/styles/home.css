@@ -1,0 +1,2 @@
+/* 首页参数已统一移至 ./site-settings.css 的 01 区和 06 手机区。
+ * 本文件保留为原有导入入口；首页布局规则仍在 src/pages/index.astro。 */

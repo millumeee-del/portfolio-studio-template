@@ -1,0 +1,59 @@
+{
+  "version": 2,
+  "entries": {
+    "你好，我是创作者": {
+      "en": "Hello, I'm a creator",
+      "manual": true
+    },
+    "关于我": {
+      "en": "About me",
+      "manual": true
+    },
+    "在这里介绍你的创作方向、经历和兴趣。所有示例文字都可以替换。": {
+      "en": "Introduce your work, experience and interests here. All example text is editable.",
+      "manual": true
+    }
+  },
+  "scopes": {
+    "/projects/motion-design/sample-1/": {
+      "entries": {
+        "这是示例项目。你可以编辑文字、替换图片，并拖动各个内容框。": {
+          "en": "This is a sample project. Edit the text, replace the image, and drag each content frame.",
+          "manual": true
+        }
+      }
+    },
+    "/projects/touchdesigner/sample-2/": {
+      "entries": {
+        "这是示例项目。你可以编辑文字、替换图片，并拖动各个内容框。": {
+          "en": "This is a sample project. Edit the text, replace the image, and drag each content frame.",
+          "manual": true
+        }
+      }
+    },
+    "/projects/character-design/sample-3/": {
+      "entries": {
+        "这是示例项目。你可以编辑文字、替换图片，并拖动各个内容框。": {
+          "en": "This is a sample project. Edit the text, replace the image, and drag each content frame.",
+          "manual": true
+        }
+      }
+    },
+    "/projects/glsl-shaders/sample-4/": {
+      "entries": {
+        "这是示例项目。你可以编辑文字、替换图片，并拖动各个内容框。": {
+          "en": "This is a sample project. Edit the text, replace the image, and drag each content frame.",
+          "manual": true
+        }
+      }
+    },
+    "/projects/live-visual/sample-5/": {
+      "entries": {
+        "这是示例项目。你可以编辑文字、替换图片，并拖动各个内容框。": {
+          "en": "This is a sample project. Edit the text, replace the image, and drag each content frame.",
+          "manual": true
+        }
+      }
+    }
+  }
+}

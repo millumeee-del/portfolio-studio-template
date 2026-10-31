@@ -1,0 +1,33 @@
+---
+import {ABOUT_CORNER_NAMES} from '../lib/about-portrait.js';
+import '../styles/about-portrait-editor.css';
+---
+<div class="about-portrait-editor" data-about-portrait-editor>
+  <button class="about-edit-entry" data-about-edit-open type="button">编辑 About 排版</button>
+  <div class="about-shape-overlay" data-about-shape-overlay hidden>
+    <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><polygon data-about-shape-outline /></svg>
+    <div class="about-shape-guide about-shape-guide-x" data-about-guide-x hidden></div><div class="about-shape-guide about-shape-guide-y" data-about-guide-y hidden></div>
+    {ABOUT_CORNER_NAMES.map((name,index)=><button type="button" class="about-corner" data-about-corner={index} aria-label={`拖动头像${name}`} title={name}><span>{index+1}</span></button>)}
+  </div>
+  <section class="about-shape-toolbar" data-about-shape-toolbar aria-label="头像框编辑" hidden>
+    <header><strong data-about-profile>About 排版</strong><button type="button" data-about-add-text>＋ 文本框</button><button type="button" data-about-collapse aria-expanded="true">收起参数</button><button type="button" data-about-undo disabled>撤销</button><button type="button" data-about-cancel>取消</button><button type="button" data-about-save>保存排版</button></header>
+    <div class="about-shape-fields">
+      <label class="about-text-field">替换头像图片<input type="file" data-about-image accept="image/png,image/jpeg,image/webp,image/gif,image/avif" /></label>
+      <label class="about-text-field">选择文本框 <select data-about-selected></select></label>
+      <div class="about-text-settings" data-about-text-settings>
+        <label class="about-text-field">文字 <textarea data-about-text-value maxlength="16000" rows="4" placeholder="输入任意文字"></textarea></label>
+        <label>字号 <input type="number" data-about-text-param="fontSize" min="10" max="120" step="1" /> px</label>
+        <label>宽 <input type="number" data-about-text-param="width" min="60" max="1600" /> px</label><label>最小高 <input type="number" data-about-text-param="height" min="24" max="2400" /> px</label>
+        <label>字重 <select data-about-text-weight><option value="400">常规</option><option value="500">中等</option><option value="600">半粗</option><option value="700">粗体</option></select></label>
+        <label>行高 <input type="number" data-about-text-line min="1" max="3" step="0.1" /></label>
+        <label class="about-text-field">链接（选填）<input type="text" data-about-text-href placeholder="https:// 或 mailto:" maxlength="2000" /></label>
+        <button type="button" data-about-remove-text>删除此文本框</button>
+      </div>
+      <label>头像宽 <input type="number" data-about-field="width" min="160" max="760" step="1"/> px</label><label>头像高 <input type="number" data-about-field="height" min="160" max="900" step="1"/> px</label>
+      <button type="button" data-about-rectangle>头像矩形</button><button type="button" data-about-reference>头像参考斜框</button>
+      <label>照片左右 <input type="range" data-about-field="imageX" min="0" max="100" step="1"/></label><label>照片上下 <input type="range" data-about-field="imageY" min="0" max="100" step="1"/></label><label>照片放大 <input type="range" data-about-field="zoom" min="1" max="2.5" step="0.01"/></label>
+    </div>
+    <p data-about-edit-status role="status">点击文本直接打字，拖动框上方标签移动；Alt 暂停吸附。</p>
+  </section>
+</div>
+<script>import '../scripts/about-portrait-editor.js';</script>

@@ -1,0 +1,70 @@
+---
+import { socialLinks } from '../data/social-links.js';
+import '../styles/home.css';
+import {readHomeLayouts} from '../lib/home-layout.server.js';
+const {editable=false,followHome=false}=Astro.props;
+const homeLayouts=followHome?readHomeLayouts():{};
+const socialStyle=Object.entries(homeLayouts).flatMap(([profile,layout])=>layout?.socials?Object.entries({x:layout.socials.x,width:layout.socials.width,height:layout.socials.height,size:layout.socials.iconSize,art:layout.socials.artSize,gap:layout.socials.gap,radius:layout.socials.radius}).map(([key,value])=>`--contact-${profile}-${key}:${value/layout.referenceWidth}`):[]).join(';');
+const wechat=socialLinks.find(social=>social.qrImage);
+const dialogId='wechat-contact-'+crypto.randomUUID();
+---
+<footer class:list={['home-socials',{'follows-home':followHome}]} style={followHome?socialStyle:undefined} data-home-social-stage={editable?'':undefined} aria-label="社交平台与联系方式">
+  <ul class="social-list">
+    {socialLinks.map(social => (
+      <li>
+        {social.qrImage ? (
+          <button type="button" class="social-icon" data-wechat-open aria-controls={dialogId} aria-haspopup="dialog" aria-label={social.name} title={social.name}>
+            <img src={social.icon} alt="" width="46" height="46" decoding="async" />
+          </button>
+        ) : social.href ? (
+          <a class="social-icon" href={social.href} target={social.href.startsWith('https:')?'_blank':undefined} rel={social.href.startsWith('https:')?'noopener noreferrer':undefined} aria-label={social.name} title={social.name}>
+            <img src={social.icon} alt="" width="46" height="46" decoding="async" />
+          </a>
+        ) : (
+          <span class="social-icon" role="img" aria-label={social.name} title={social.name}>
+            <img src={social.icon} alt="" width="46" height="46" decoding="async" />
+          </span>
+        )}
+      </li>
+    ))}
+  </ul>
+</footer>
+
+{wechat && <dialog class="social-qr-dialog" id={dialogId} data-wechat-dialog aria-label="微信二维码">
+  <header><h2>微信联系</h2><button type="button" data-wechat-close aria-label="关闭微信二维码" autofocus>×</button></header>
+  <img src={wechat.qrImage} alt="studio 的微信二维码，扫码添加好友" width="888" height="1131" loading="lazy" decoding="async" data-release-original />
+</dialog>}
+
+<script>
+  import {mountSocialContacts} from '../scripts/social-contacts.js';
+  let dispose: (()=>void)|undefined;
+  function initialize(){dispose?.();dispose=mountSocialContacts();}
+  function cleanup(){dispose?.();dispose=undefined;}
+  initialize();
+  document.addEventListener('astro:page-load',initialize);
+  document.addEventListener('astro:before-swap',cleanup);
+  if(import.meta.hot)import.meta.hot.dispose(()=>{cleanup();document.removeEventListener('astro:page-load',initialize);document.removeEventListener('astro:before-swap',cleanup);});
+</script>
+
+<style>
+  .home-socials { margin-top: var(--home-social-top-gap); padding: 0 16px var(--home-social-bottom-space); }
+  .social-list { display: flex; align-items: center; justify-content: center; gap: var(--home-social-gap); padding: 0; margin: 0; list-style: none; }
+  .social-list li { display: flex; }
+  .social-icon { display: grid; place-items: center; box-sizing: border-box; width: var(--home-social-size); height: var(--home-social-size); padding: 0; border: 1px solid var(--home-social-border-color); border-radius: var(--home-social-radius); background: transparent; transition: background-color .18s, border-color .18s; }
+  button.social-icon { cursor: pointer; }
+  .social-icon img { display: block; width: var(--home-social-art-size); height: var(--home-social-art-size); object-fit: contain; }
+  .social-icon:hover { background: #f0f0ed; border-color: #888; }
+  .social-icon:focus-visible { outline: 2px solid #161616; outline-offset: 4px; }
+  /* 内页也按 Home 的整页画布定位；直接输出 CSS，避免加载后移动按钮。 */
+  .follows-home { container-type:inline-size; width:calc(100% + var(--sidebar-width) + var(--page-padding) * 2); margin-left:calc(-1 * (var(--sidebar-width) + var(--page-padding))); padding-inline:0; --contact-x:var(--contact-desktop-x,.325); --contact-width:var(--contact-desktop-width,.35); --contact-height:var(--contact-desktop-height,.05909); --contact-size:var(--contact-desktop-size,.05909); --contact-art:var(--contact-desktop-art,.05091); --contact-gap:var(--contact-desktop-gap,.01364); --contact-radius:var(--contact-desktop-radius,.00909); }
+  .follows-home .social-list { --contact-canvas:min(100cqw,var(--home-hero-max-width)); width:calc(var(--contact-canvas) * var(--contact-width)); height:calc(var(--contact-canvas) * var(--contact-height)); margin-left:calc((100% - var(--contact-canvas)) / 2 + var(--contact-canvas) * var(--contact-x)); --home-social-size:calc(var(--contact-canvas) * var(--contact-size)); --home-social-art-size:calc(var(--contact-canvas) * var(--contact-art)); --home-social-gap:calc(var(--contact-canvas) * var(--contact-gap)); --home-social-radius:calc(var(--contact-canvas) * var(--contact-radius)); }
+  @media(max-width:700px) { .follows-home { width:calc(100% + var(--page-padding) * 2); margin-left:calc(-1 * var(--page-padding)); --contact-x:var(--contact-mobile-x,.126667); --contact-width:var(--contact-mobile-width,.746667); --contact-height:var(--contact-mobile-height,.128); --contact-size:var(--contact-mobile-size,.128); --contact-art:var(--contact-mobile-art,.106667); --contact-gap:var(--contact-mobile-gap,.026667); --contact-radius:var(--contact-mobile-radius,.026667); } }
+  .social-qr-dialog { box-sizing: border-box; width: min(380px,calc(100vw - 32px)); max-height: calc(100svh - 32px); margin: auto; padding: 12px; overflow: auto; border: 1px solid #deded8; border-radius: 10px; background: white; color: #161616; box-shadow: 0 12px 50px #0003; font-family: var(--site-font-family); }
+  .social-qr-dialog::backdrop { background: rgb(0 0 0 / .35); }
+  .social-qr-dialog header { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 8px; }
+  .social-qr-dialog h2 { margin: 0; font-size: 16px; font-weight: 500; }
+  .social-qr-dialog header button { display: grid; place-items: center; width: 32px; height: 32px; padding: 0; border: 0; background: transparent; color: #555; font: 26px/1 Arial,sans-serif; cursor: pointer; }
+  .social-qr-dialog header button:focus-visible { outline: 2px solid #e87925; outline-offset: 2px; }
+  .social-qr-dialog>img { display: block; width: 100%; height: auto; max-height: calc(100svh - 110px); object-fit: contain; }
+  @media (prefers-reduced-motion: reduce) { .social-icon { transition: none; } }
+</style>

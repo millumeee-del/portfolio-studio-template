@@ -1,0 +1,15 @@
+---
+import '../styles/site-settings.css';
+import '../styles/site-nav.css';
+import LanguageControl from './LanguageControl.astro';
+interface Props { active?: 'home' | 'projects' | 'about' | null; }
+const { active } = Astro.props;
+---
+<nav class="site-nav" aria-label="主导航">
+ <div class="site-nav-links" data-header-item="nav">
+  <a href="/" class:list={{ active: active === 'home' }} aria-current={active === 'home' ? 'page' : undefined}>Home</a>
+  <a href="/projects/" class:list={{ active: active === 'projects' }} aria-current={active === 'projects' ? 'page' : undefined}>Projects</a>
+  <a href="/about/" class:list={{ active: active === 'about' }} aria-current={active === 'about' ? 'page' : undefined}>About</a>
+ </div>
+</nav>
+<LanguageControl />

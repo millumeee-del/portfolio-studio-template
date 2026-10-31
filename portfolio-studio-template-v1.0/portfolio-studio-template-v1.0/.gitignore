@@ -1,0 +1,17 @@
+node_modules/
+dist/
+.astro/
+.openai/
+.codex-backups/
+.visitor-data/
+.wrangler/
+.cloudflare/
+.publish-state/
+.translation-models/
+.env*
+!.env.example
+.dev.vars*
+*.sqlite*
+*.log
+*.zip
+.DS_Store

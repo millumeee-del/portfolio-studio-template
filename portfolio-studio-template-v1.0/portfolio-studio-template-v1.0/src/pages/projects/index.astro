@@ -1,0 +1,12 @@
+---
+import PortfolioLayout from '../../layouts/PortfolioLayout.astro';
+import { projectWorks as works } from '../../data/portfolio';
+import WorksGrid from '../../components/WorksGrid.astro';
+import ProjectBreadcrumbs from '../../components/ProjectBreadcrumbs.astro';
+import GalleryEditor from '../../components/GalleryEditor.astro';
+---
+<PortfolioLayout title="Projects">
+  <ProjectBreadcrumbs><span class="project-count">{String(works.length).padStart(2, '0')} WORKS</span></ProjectBreadcrumbs>
+  {import.meta.env.DEV && works.length > 0 && <GalleryEditor />}
+  <WorksGrid works={works} />
+</PortfolioLayout>

@@ -1,0 +1,38 @@
+---
+import PortfolioLayout from '../../layouts/PortfolioLayout.astro';
+import {showreels} from '../../data/portfolio';
+import {initialShowreelIndex} from '../../lib/showreel-navigation.js';
+import '../../styles/showreel.css';
+import settings from '../../data/showreels.json';
+import {showreelWatchLayoutCSS} from '../../lib/showreel-settings.js';
+import ShowreelWatchEditor from '../../components/ShowreelWatchEditor.astro';
+const watchLayouts='watchLayouts' in settings?settings.watchLayouts:{};
+const bootstrap=`(()=>{const host=document.querySelector('[data-showreel-scroller]');const index=(${initialShowreelIndex.toString()})(${JSON.stringify(showreels.map(reel=>reel.year))},location.search);const place=()=>{host.scrollTop=index*host.clientHeight;};place();const resize=new ResizeObserver(place);resize.observe(host);host.addEventListener('showreel:mounted',()=>resize.disconnect(),{once:true});host.dataset.activeYear=${JSON.stringify(showreels.map(reel=>String(reel.year)))}[index];})();`;
+---
+<PortfolioLayout title="SHOWREEL" current="showreel">
+  <style is:inline data-watch-layout-saved set:html={showreelWatchLayoutCSS(watchLayouts)}/>
+  <div class="showreel-watch">
+    <div class="showreel-watch-toolbar">
+      <a href="/" data-i18n-zh="← 返回首页" data-i18n-en="← Home">← 返回首页</a>
+      <nav aria-label="Showreel 年份">{showreels.map(reel=><button type="button" data-watch-year={reel.year} data-no-translate>{reel.year==='all'?'ALL':reel.year}</button>)}</nav>
+    </div>
+    <div class="showreel-scroller" data-showreel-scroller tabindex="0" aria-label="Showreel 年度作品集">
+      {showreels.map((reel,index)=><section class="showreel-panel" data-showreel-year={reel.year} aria-labelledby={`showreel-${reel.year}`}>
+        {index===0?<h1 id={`showreel-${reel.year}`} class="showreel-title" data-no-translate>SHOWREEL {reel.title}</h1>:<h2 id={`showreel-${reel.year}`} class="showreel-title" data-no-translate>SHOWREEL {reel.title}</h2>}
+        <div class="showreel-player">
+          <video controls playsinline preload="none" poster={reel.poster} aria-label={`studio Showreel ${reel.year}`}><source src={reel.src} type="video/mp4"/><a href={reel.src}>打开视频</a></video>
+        </div>
+      </section>)}
+    </div>
+    <script is:inline set:html={bootstrap}/>
+    {import.meta.env.DEV&&<ShowreelWatchEditor/>}
+  </div>
+</PortfolioLayout>
+<script>
+  import {mountShowreel} from '../../scripts/showreel.js';
+  let dispose:(()=>void)|undefined;
+  function initialize(){dispose?.();const host=document.querySelector<HTMLElement>('[data-showreel-scroller]');dispose=host?mountShowreel(host):undefined;}
+  function cleanup(){dispose?.();dispose=undefined;}
+  initialize();document.addEventListener('astro:page-load',initialize);document.addEventListener('astro:before-swap',cleanup);
+  if(import.meta.hot)import.meta.hot.dispose(()=>{cleanup();document.removeEventListener('astro:page-load',initialize);document.removeEventListener('astro:before-swap',cleanup);});
+</script>

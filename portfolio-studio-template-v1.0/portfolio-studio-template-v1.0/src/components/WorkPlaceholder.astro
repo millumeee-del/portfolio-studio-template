@@ -1,0 +1,63 @@
+---
+import type { Work } from '../data/portfolio';
+interface Props { variant?: Work['placeholder']; }
+const { variant = 'orbit' } = Astro.props;
+---
+<!-- 仅供替换前预览的代码绘制图形；填写 cover 后自动换成你的 GIF。 -->
+<svg class:list={['work-placeholder', variant]} viewBox="0 0 600 720" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+  <rect class="paper" width="600" height="720" />
+  {variant === 'orbit' && <>
+    <g class="orbit-lines" fill="none" stroke="currentColor" stroke-width="1" opacity=".3">
+      {Array.from({length: 11}, (_,i) => <ellipse cx="300" cy="360" rx={55+i*23} ry={55+i*23} />)}
+    </g>
+    <g class="orbit-turn"><ellipse cx="300" cy="360" rx="220" ry="82" fill="none" stroke="#e7ee9c" stroke-width="36" transform="rotate(-35 300 360)" /><circle cx="300" cy="360" r="122" fill="#ff673d" /><circle cx="261" cy="323" r="29" fill="#ff956a" /></g>
+  </>}
+  {variant === 'ribbon' && <>
+    <g class="ribbon-flow" fill="none" stroke-linecap="round">
+      {Array.from({length: 9}, (_,i) => <path d={`M -110 ${85+i*73} C 150 ${-90+i*73} 345 ${285+i*73} 710 ${90+i*73}`} stroke={i%2 ? '#7e161a' : '#ffb4a3'} stroke-width="32" />)}
+    </g>
+  </>}
+  {variant === 'bloom' && <>
+    <g class="bloom-turn">
+      {Array.from({length: 10}, (_,i) => <ellipse cx="300" cy="260" rx="49" ry="137" fill={i%2 ? '#e7f78b' : '#a9c95e'} transform={`rotate(${i*36} 300 360)`} />)}
+      <circle cx="300" cy="360" r="55" fill="#f55a37" /><circle cx="300" cy="360" r="13" fill="#242b22" />
+    </g>
+  </>}
+  {variant === 'wave' && <>
+    <g class="wave-flow" fill="none" stroke="#e7eef6" stroke-width="31" stroke-linecap="round">
+      {Array.from({length: 9}, (_,i) => <path d={`M -130 ${60+i*82} Q 60 ${-20+i*82} 210 ${60+i*82} T 550 ${60+i*82} T 890 ${60+i*82}`} />)}
+    </g>
+    <circle cx="300" cy="360" r="90" fill="#f6ca54" />
+  </>}
+  {variant === 'type' && <>
+    <g fill="#292b24" font-family="Arial, sans-serif" font-weight="900" font-size="151" letter-spacing="-10">
+      <text x="38" y="265">PLAY.</text><text class="type-shift" x="38" y="407">MAKE.</text><text x="38" y="549">MOVE.</text>
+    </g>
+    <circle cx="505" cy="185" r="22" fill="#ed4c35" />
+  </>}
+  {variant === 'grid' && <>
+    <g fill="none" stroke="#5e7465" stroke-width="1" opacity=".55">
+      {Array.from({length: 18}, (_,i) => <path d={`M ${i*40-40} 0 V 720 M 0 ${i*44} H 600`} />)}
+    </g>
+    <g class="grid-shift" fill="#ed4c35"><rect x="100" y="188" width="160" height="160" /><rect x="300" y="348" width="160" height="160" /></g>
+    <circle cx="300" cy="360" r="135" fill="none" stroke="#203f33" stroke-width="22" />
+  </>}
+</svg>
+<style>
+  .work-placeholder { display: block; width: 100%; height: 100%; color: #bed3e8; }
+  .paper { fill: #2040b8; }
+  .ribbon .paper { fill: #ee4e3d; }
+  .bloom .paper { fill: #283a33; }
+  .wave .paper { fill: #4c7cca; }
+  .type .paper { fill: #e7ec99; }
+  .grid .paper { fill: #e5e2d7; }
+  .orbit-turn, .bloom-turn { transform-origin: 300px 360px; animation: turn 24s linear infinite; }
+  .bloom-turn { animation-direction: reverse; animation-duration: 36s; }
+  .ribbon-flow { animation: float 5s ease-in-out infinite alternate; }
+  .wave-flow { animation: drift 6s ease-in-out infinite alternate; }
+  .type-shift, .grid-shift { animation: drift 4s ease-in-out infinite alternate; }
+  @keyframes turn { to { transform: rotate(360deg); } }
+  @keyframes float { to { transform: translateY(48px); } }
+  @keyframes drift { to { transform: translateX(32px); } }
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
+</style>

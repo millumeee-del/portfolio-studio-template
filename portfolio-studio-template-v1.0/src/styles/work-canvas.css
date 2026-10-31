@@ -1,0 +1,33 @@
+/* 正式作品页与编辑画布共用。坐标和尺寸按画布宽度等比适配。 */
+.work-canvas { position:relative; width:100%; aspect-ratio:var(--canvas-width) / var(--canvas-height); container-type:inline-size; }
+.canvas-frame { position:absolute; min-width:0; }
+.canvas-frame > .work-block { width:100% !important; height:100%; margin:0 !important; }
+.canvas-frame .work-media { position:relative; width:100%; height:100%; margin:0; }
+.canvas-frame .work-media > img,.canvas-frame .work-media > video,.canvas-frame .work-preview,.canvas-empty-media { display:block; width:100%; height:100%; max-height:none; min-height:0; object-fit:var(--frame-fit,cover); }
+.canvas-frame .work-preview { aspect-ratio:auto; }
+.canvas-frame .work-preview svg { width:100%; height:100%; }
+.canvas-frame .work-media figcaption { position:absolute; top:100%; left:0; width:100%; margin:calc(var(--work-caption-top-gap) * (100cqw / (var(--canvas-width) * 1px))) 0 0; font-size:calc(var(--work-caption-font-size) * (100cqw / (var(--canvas-width) * 1px))); }
+.canvas-frame .block-text { overflow:hidden; font-size:calc(var(--canvas-text-size,16) / var(--canvas-width) * 100cqw); }
+.canvas-frame .block-text h2 { font-size:1.75em; margin-bottom:.6em; }
+.canvas-frame .block-spacer > div { height:100% !important; }
+.canvas-mobile-preview.work-canvas { aspect-ratio:auto; }
+.canvas-mobile-preview > .canvas-frame { position:relative; left:auto !important; top:auto !important; width:100% !important; height:auto !important; margin:0 0 24px; }
+.canvas-mobile-preview .canvas-frame .block-text { font-size:max(10px,calc(var(--canvas-text-size,16)*.5px)); overflow:visible; }
+.canvas-mobile-preview .canvas-frame .block-text h2 { font-size:1.8em; }
+.canvas-mobile-preview .canvas-frame .block-spacer { height:var(--mobile-spacer-height,48px); }
+.canvas-mobile-preview .canvas-frame .work-media { height:auto; }
+.canvas-mobile-preview .canvas-frame .work-media.has-caption { display:block; }
+.canvas-mobile-preview .canvas-frame .work-media > img,.canvas-mobile-preview .canvas-frame .work-media > video { width:auto; height:auto; max-width:100%; max-height:min(60svh,480px); margin-inline:auto; object-fit:contain; }
+.canvas-mobile-preview .canvas-frame .work-preview { height:auto; aspect-ratio:var(--work-ratio,4 / 3); }
+.canvas-mobile-preview .canvas-frame .work-media figcaption { position:static; margin-top:var(--work-caption-top-gap); font-size:var(--work-caption-font-size); }
+@media(max-width:700px) {
+  .work-canvas:not(.editor-artboard) { aspect-ratio:auto; }
+  .work-canvas:not(.editor-artboard) > .canvas-frame { position:relative; left:auto !important; top:auto !important; width:100% !important; height:auto !important; margin:0 0 24px; }
+  .work-canvas:not(.editor-artboard) .canvas-frame .block-text { font-size:max(var(--work-mobile-text-min),calc(var(--canvas-text-size,16)*1px * var(--work-mobile-text-scale))); overflow:visible; }
+  .work-canvas:not(.editor-artboard) .canvas-frame .block-spacer { height:var(--mobile-spacer-height,48px); }
+  .work-canvas:not(.editor-artboard) .canvas-frame .work-media { height:auto; }
+  .work-canvas:not(.editor-artboard) .canvas-frame .work-media.has-caption { display:block; }
+  .work-canvas:not(.editor-artboard) .canvas-frame .work-media > img,.work-canvas:not(.editor-artboard) .canvas-frame .work-media > video { width:auto; height:auto; max-width:100%; max-height:var(--work-mobile-media-height); margin-inline:auto; object-fit:contain; }
+  .work-canvas:not(.editor-artboard) .canvas-frame .work-preview { height:auto; aspect-ratio:var(--work-ratio,4 / 3); }
+  .work-canvas:not(.editor-artboard) .canvas-frame .work-media figcaption { position:static; margin-top:var(--work-caption-top-gap); font-size:var(--work-caption-font-size); }
+}

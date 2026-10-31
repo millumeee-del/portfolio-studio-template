@@ -1,0 +1,6 @@
+.hero[data-home-canvas] { position: relative; }
+.hero[data-home-canvas][data-home-manual] { position: relative; display: block; padding: 0; }
+.hero[data-home-manual] .intro { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.hero[data-home-manual] .intro .category-wheel, .hero[data-home-manual] .intro .button { pointer-events: auto; }
+.hero[data-home-manual] .intro .button { position: absolute; margin: 0; }
+.hero[data-home-manual] [data-home-social-stage] .social-list { height: 100%; }

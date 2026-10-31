@@ -1,0 +1,28 @@
+---
+import { getCategoryWorks, workUrl, type Work } from '../data/portfolio';
+interface Props { work: Work; }
+const { work } = Astro.props;
+const siblings = getCategoryWorks(work.category);
+const index = siblings.findIndex(item => item.slug === work.slug);
+const previous = siblings[index - 1];
+const next = siblings[index + 1];
+---
+<nav class="work-pagination" aria-label="作品翻页">
+  {previous ? <a href={workUrl(previous)} rel="prev" aria-keyshortcuts="ArrowLeft" title="上一个作品（←）" aria-label={`上一个作品：${previous.title}`}>prev</a> : <span aria-disabled="true">prev</span>}
+  <span class="pagination-separator" aria-hidden="true">/</span>
+  {next ? <a href={workUrl(next)} rel="next" aria-keyshortcuts="ArrowRight" title="下一个作品（→）" aria-label={`下一个作品：${next.title}`}>next</a> : <span aria-disabled="true">next</span>}
+</nav>
+<script>
+  import { mountWorkPagination } from '../scripts/work-pagination.js';
+  let dispose: (() => void) | undefined;
+  function initialize() { dispose?.(); dispose = mountWorkPagination(); }
+  function cleanup() { dispose?.(); dispose = undefined; }
+  initialize();
+  document.addEventListener('astro:page-load', initialize);
+  document.addEventListener('astro:before-swap', cleanup);
+  if (import.meta.hot) import.meta.hot.dispose(() => {
+    cleanup();
+    document.removeEventListener('astro:page-load', initialize);
+    document.removeEventListener('astro:before-swap', cleanup);
+  });
+</script>

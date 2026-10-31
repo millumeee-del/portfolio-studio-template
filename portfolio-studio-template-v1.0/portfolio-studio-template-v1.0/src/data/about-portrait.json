@@ -1,0 +1,29 @@
+{
+  "width": 480,
+  "height": 550,
+  "points": [
+    [
+      2,
+      4
+    ],
+    [
+      100,
+      0
+    ],
+    [
+      93,
+      97
+    ],
+    [
+      0,
+      100
+    ]
+  ],
+  "imageX": 50,
+  "imageY": 50,
+  "zoom": 1,
+  "copyWidth": 480,
+  "copyHeight": 260,
+  "fontSize": 16,
+  "imageSrc": "/contacts/avatar.png"
+}

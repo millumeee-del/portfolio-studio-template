@@ -1,0 +1,119 @@
+{
+  "name": "Portfolio Studio Template",
+  "version": "1.0.0",
+  "date": "2026-10-30",
+  "license": "MIT",
+  "sampleMedia": "Original programmatic geometric assets only",
+  "checks": {
+    "cleanInstall": true,
+    "testsPassed": 30,
+    "productionPages": 15,
+    "privateSourceIdentifierAudit": "passed",
+    "staticSharedMoodsDefault": false
+  },
+  "notIncluded": [
+    "personal content",
+    "original portfolio media",
+    "private account IDs",
+    "credentials",
+    "visitor databases",
+    "Git history",
+    "node_modules",
+    "build outputs",
+    "personal publishing scripts"
+  ],
+  "assetFiles": [
+    {
+      "path": "public/contacts/avatar.png",
+      "sha256": "c76efc01f2d2461dd02c4721f15da7265cb2c263a406d9e2cf80fe5c8690a759"
+    },
+    {
+      "path": "public/demo/project-1.png",
+      "sha256": "4a3cb7e6148de73937e4b77be8c156ed6018d433be38a5787f84ef47a6a64277"
+    },
+    {
+      "path": "public/demo/project-2.png",
+      "sha256": "1c8b18d6b2fc0cc2c55a99541e5b950e30e0d0de50523cc3fdc9784a0f86ab48"
+    },
+    {
+      "path": "public/demo/project-3.png",
+      "sha256": "3fd2d060ed5251472056917913006a0c02bd9b44fe2a9bafcc8001b215d4a713"
+    },
+    {
+      "path": "public/demo/project-4.png",
+      "sha256": "13f2d3a19564b376475fe8e8a78f890984638a10c443254d7e1b15302907cfba"
+    },
+    {
+      "path": "public/demo/project-5.png",
+      "sha256": "45ede97bb717448bdebb1c7a2e5279424a4d8530861c6389772604ef01e08b92"
+    },
+    {
+      "path": "public/favicon.svg",
+      "sha256": "5dec9568bc111e2041f736c2569b8796504b431f90f4b1d5ef2460c1b1ad7750"
+    },
+    {
+      "path": "public/icons/chat.svg",
+      "sha256": "a601863fe5b96faab7f486aa597c224da450f19779cf3fd32c376d3bf85b2e75"
+    },
+    {
+      "path": "public/icons/code.svg",
+      "sha256": "e1d4fe893ad903b7c608f3f024a4a793c8350f70ba0573a889ad690ff2faf9c5"
+    },
+    {
+      "path": "public/icons/link.svg",
+      "sha256": "eab7c91efbfac8b6c65f56d10d490f98872bbb26da43cd1caa2fff7a1b0e267a"
+    },
+    {
+      "path": "public/icons/mail.svg",
+      "sha256": "a8059e5efe6f61c7aa7a0a1fd4cca5f9a8b527dd65b68e24760202beaf22b864"
+    },
+    {
+      "path": "public/icons/star.svg",
+      "sha256": "d8c0c415135c43b0779c905d8274109aeade96d7615add19f039e79620bcc99d"
+    },
+    {
+      "path": "public/models/demo-0.glb",
+      "sha256": "71a9c1192680a16b643d55c624c76b7e07df0054061e6d7a89a42fdef870781c"
+    },
+    {
+      "path": "public/models/demo-1.glb",
+      "sha256": "21e3a4c2ab09f9ecc0d5dbb9cd3936f27931de0504aed0a407b4a1cb09d5890a"
+    },
+    {
+      "path": "public/models/demo-2.glb",
+      "sha256": "60ac61bece90bbabfdf0fcd38ade02325fdd90815d9b643ca14384c396e35eba"
+    },
+    {
+      "path": "public/showreel/2022-poster.webp",
+      "sha256": "a4b01771e5b61d265c95873a241b68229557b358a13141e0e66db3a46523c114"
+    },
+    {
+      "path": "public/showreel/2022.mp4",
+      "sha256": "33d461094b061effd817bba2652c93681615b8b208f067fd88802e5eae6ef280"
+    },
+    {
+      "path": "public/showreel/2024-poster.webp",
+      "sha256": "59f139181fca0861858815ba65a9f955fe6437d7a79d21f0d52280afd3026f62"
+    },
+    {
+      "path": "public/showreel/2024.mp4",
+      "sha256": "37686342248176eb87d2ff5cdb782972202416f542816ea90eb1f459da22f144"
+    },
+    {
+      "path": "public/showreel/2026-poster.webp",
+      "sha256": "1d0f5a3361396b64443b9b80cd8cd57ea09c237be047d00617b4490a9b970994"
+    },
+    {
+      "path": "public/showreel/2026.mp4",
+      "sha256": "edeb1e6052be73e986e10b0c722c0d96420a2f90523d0d7373eb9bbc6e3561da"
+    },
+    {
+      "path": "public/showreel/all-poster.webp",
+      "sha256": "23990249bd036ea4cef71fe3d71949d17aa29e1c9e07247e2f8bdcbc42346e38"
+    },
+    {
+      "path": "public/showreel/all.mp4",
+      "sha256": "f254236e55c5d6eb021aef525ff57e22c4873d24296bdc29d1e6b2b68b74fff9"
+    }
+  ]
+}

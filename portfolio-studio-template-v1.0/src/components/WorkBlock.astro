@@ -1,0 +1,21 @@
+---
+import type { Work, WorkBlock } from '../data/portfolio';
+import { blockStyle, groupStyle } from '../lib/work-content.js';
+import WorkPlaceholder from './WorkPlaceholder.astro';
+import WorkEmbed from './WorkEmbed.astro';
+import { parseMediaEmbed } from '../lib/media-embed.js';
+interface Props { block: WorkBlock; work: Work; }
+const { block, work } = Astro.props;
+const embed=block.type==='video'?parseMediaEmbed(block.embedUrl):null;
+---
+<section class:list={['work-block', `block-${block.type}`]} style={blockStyle(block)}>
+  {block.type === 'group' && <div class="work-block-group" style={groupStyle(block)}>
+    {(block.children || []).map(child => <Astro.self block={child} work={work} />)}
+  </div>}
+  {block.type === 'text' && <>{block.heading && <h2 data-translation-source={import.meta.env.DEV?block.heading:undefined}>{block.heading}</h2>}<p data-translation-source={import.meta.env.DEV?block.text:undefined}>{block.text}</p></>}
+  {block.type === 'spacer' && <div style={`height:${block.height??48}px`} aria-hidden="true"></div>}
+  {(block.type === 'image' || block.type === 'video') && <figure class:list={['work-media',{'has-caption':!!block.caption}]}>
+    {embed ? <WorkEmbed block={block} embed={embed} title={work.title} cover={work.cover} /> : block.type === 'video' && block.src ? <video src={block.src} controls playsinline preload="metadata" /> : block.src ? <img src={block.src} alt={block.caption || work.title} loading="lazy" /> : block.placeholder ? <div class="work-preview" style={`--work-ratio:${work.aspectRatio||'4 / 3'}`}><WorkPlaceholder variant={block.placeholder} /></div> : <div class="canvas-empty-media" aria-hidden="true"></div>}
+    {block.caption && <figcaption data-translation-source={import.meta.env.DEV?block.caption:undefined}>{block.caption}</figcaption>}
+  </figure>}
+</section>

@@ -1,0 +1,15 @@
+import assert from 'node:assert/strict';
+import {overviewWorkKey,OVERVIEW_GALLERY,removeGalleryItem} from '../src/lib/gallery-identity.js';
+import {validateGalleryLayout,reorderGallery} from '../src/lib/gallery-layout.js';
+import {migrateCategory} from '../src/lib/category-management.js';
+const works=[{category:'a',slug:'same'},{category:'b',slug:'same'}],keys=works.map(overviewWorkKey);
+assert.deepEqual(keys,['a/same','b/same']);
+const layout={cards:Object.fromEntries(keys.map(key=>[key,{span:.5,height:260}])),rows:[{slugs:keys,span:1}]};
+assert.deepEqual(Object.keys(validateGalleryLayout(layout,keys).cards),keys);
+assert.deepEqual(reorderGallery(layout,keys[1],0).rows[0].slugs,[keys[1],keys[0]]);
+const deleted=removeGalleryItem(layout,keys[0]);assert.deepEqual(Object.keys(deleted.cards),[keys[1]]);assert.deepEqual(deleted.rows[0].slugs,[keys[1]]);assert.equal(removeGalleryItem(deleted,keys[1]),null);
+assert.deepEqual(layout.rows[0].slugs,keys);
+const moved=migrateCategory('a','b',works,{[OVERVIEW_GALLERY]:layout});
+assert.deepEqual(Object.keys(moved.layouts[OVERVIEW_GALLERY].cards),['b/same-2','b/same']);assert.deepEqual(moved.layouts[OVERVIEW_GALLERY].rows[0].slugs,['b/same-2','b/same']);validateGalleryLayout(moved.layouts[OVERVIEW_GALLERY],moved.works.map(overviewWorkKey));
+assert.throws(()=>validateGalleryLayout(layout,['same']));
+console.log('Overview gallery checks passed: composite identities, independent scope, sorting, deletion and category migration with slug collisions.');

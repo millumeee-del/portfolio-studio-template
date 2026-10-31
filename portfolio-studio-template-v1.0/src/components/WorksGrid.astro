@@ -1,0 +1,37 @@
+---
+import type { Work } from '../data/portfolio';
+import WorkCard from './WorkCard.astro';
+import galleryLayouts from '../data/gallery-layouts.json';
+import {galleryBootstrapSource} from '../lib/gallery-bootstrap.js';
+import {OVERVIEW_GALLERY,overviewWorkKey} from '../lib/gallery-identity.js';
+interface Props { works: Work[]; variant?: 'overview' | 'category'; category?: string; }
+const { works, variant = 'overview', category } = Astro.props;
+const scope=variant==='overview'?OVERVIEW_GALLERY:category;
+const savedLayout = scope ? (galleryLayouts as Record<string, unknown>)[scope] ?? null : null;
+const bootstrap = galleryBootstrapSource();
+---
+{works.length ? (
+  <Fragment>
+  <div class:list={['works-grid', { 'works-grid-category': variant === 'category' }]} data-works-grid data-gallery-variant={variant} data-gallery-category={scope} data-gallery-layout={savedLayout ? JSON.stringify(savedLayout) : undefined} aria-label="作品画廊">{works.map(work => <WorkCard work={work} galleryKey={variant==='overview'?overviewWorkKey(work):work.slug} />)}</div>
+  <script is:inline set:html={bootstrap}></script>
+  </Fragment>
+) : (
+  <div class="empty-works"><p>{variant === 'overview' ? (import.meta.env.DEV ? '暂无展示项目，可通过右键菜单管理隐藏项目。' : '暂无展示项目。') : '这一分区的作品正在整理中。'}</p></div>
+)}
+<script>
+  import { mountWorksGallery } from '../scripts/works-gallery.js';
+  let cleanups: (() => void)[] = [];
+  function disposeGrids() { cleanups.forEach(cleanup => cleanup()); cleanups = []; }
+  function initializeGrids() {
+    disposeGrids();
+    document.querySelectorAll<HTMLElement>('[data-works-grid]').forEach(grid => cleanups.push(mountWorksGallery(grid)));
+  }
+  initializeGrids();
+  document.addEventListener('astro:page-load', initializeGrids);
+  document.addEventListener('astro:before-swap', disposeGrids);
+  if (import.meta.hot) import.meta.hot.dispose(() => {
+    disposeGrids();
+    document.removeEventListener('astro:page-load', initializeGrids);
+    document.removeEventListener('astro:before-swap', disposeGrids);
+  });
+</script>

@@ -1,0 +1,5 @@
+import {readFile,readdir,stat} from 'node:fs/promises';
+import path from 'node:path';
+const root=path.resolve('dist');let pages=0;
+async function walk(dir){for(const e of await readdir(dir,{withFileTypes:true})){const f=path.join(dir,e.name);if(e.isDirectory())await walk(f);else if(e.name.endsWith('.html')){pages++;const html=await readFile(f,'utf8');if(/data-(?:visual-work-editor|project-manager|home-layout-editor|about-portrait-editor|showreel-layout-editor)(?:\s|=|>)/.test(html))throw new Error('Development editor in production HTML: '+f);for(const m of html.matchAll(/(?:src|href|poster)="(\/[^"#]*)"/g)){const url=m[1].split(/[?#]/)[0];if(!url)continue;const local=path.join(root,decodeURIComponent(url));const exists=await stat(local).catch(()=>null);if(!exists)throw new Error('Missing asset: '+url);if(exists.isDirectory()&&!(await stat(path.join(local,'index.html')).catch(()=>null)))throw new Error('Missing page: '+url);}}}}
+await walk(root);console.log(`Production check passed: ${pages} pages, local references present, local editors excluded.`);

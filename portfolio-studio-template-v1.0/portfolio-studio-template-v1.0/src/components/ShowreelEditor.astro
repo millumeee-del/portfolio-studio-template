@@ -1,0 +1,32 @@
+<div data-showreel-editor data-no-translate>
+  <button type="button" class="showreel-edit-open" data-reel-edit-open>编辑目录</button>
+  <dialog class="showreel-edit-dialog" data-reel-edit-dialog aria-label="编辑 Showreel 目录">
+    <header><strong>Showreel 目录</strong><button type="button" data-reel-edit-close aria-label="关闭编辑器">×</button></header>
+    <form data-reel-edit-form>
+      <div class="showreel-edit-fields"><label>页面标题 · 中文<input name="title" maxlength="80"/></label><label>页面标题 · English<input name="titleEn" maxlength="80"/></label><label>引导文字 · 中文<textarea name="hint" maxlength="160" rows="2"/></label><label>引导文字 · English<textarea name="hintEn" maxlength="160" rows="2"/></label></div>
+      {[2026,2024,2022].map(year=><fieldset><legend>{year} 视频卡片</legend>
+        <div class="showreel-thumbnail-editor"><img data-reel-thumbnail-preview={year} alt={`${year} 缩略图预览`}/><div><label>更换缩略图<input type="file" data-reel-thumbnail-file={year} accept=".png,.jpg,.jpeg,.webp,.gif,.avif"/></label><input type="hidden" name={`${year}.thumbnail`}/><button type="button" data-reel-thumbnail-reset={year}>恢复默认缩略图</button></div></div>
+        <label>年份显示文字<input name={`${year}.label`} maxlength="40"/></label><div class="showreel-edit-fields"><label>简介 · 中文<textarea name={`${year}.description`} maxlength="120" rows="2"/></label><label>简介 · English<textarea name={`${year}.descriptionEn`} maxlength="120" rows="2"/></label></div>
+      </fieldset>)}
+      <footer><p data-reel-edit-status role="status"></p><button type="submit">保存到项目</button></footer>
+    </form>
+  </dialog>
+</div>
+<style>
+.showreel-edit-open { position:absolute; top:8px; right:24px; z-index:4; padding:6px 9px; border:1px solid #d6cbbd; border-radius:4px; background:#fff8ed; color:#8c551f; cursor:pointer; font:11px/1.4 Arial,sans-serif; }
+.showreel-edit-dialog { width:min(640px,calc(100vw - 28px)); max-height:80svh; overflow:auto; padding:22px; border:1px solid #d7d7ce; border-radius:10px; background:#fafaf6; color:#242421; font:13px/1.5 Arial,sans-serif; }
+.showreel-edit-dialog::backdrop { background:#0005; }.showreel-edit-dialog header { display:flex; justify-content:space-between; align-items:center; gap:20px; margin-bottom:18px; }
+.showreel-edit-dialog button { padding:7px 12px; border:1px solid #d7d7ce; border-radius:4px; background:#fff; color:inherit; font:inherit; cursor:pointer; }.showreel-edit-dialog button:disabled { opacity:.5; }
+.showreel-edit-fields { display:grid; grid-template-columns:1fr 1fr; gap:12px; }.showreel-edit-dialog label { display:grid; gap:6px; min-width:0; margin-bottom:12px; }
+.showreel-thumbnail-editor { display:grid; grid-template-columns:160px minmax(0,1fr); align-items:center; gap:14px; margin-bottom:16px; }.showreel-thumbnail-editor img { display:block; width:100%; aspect-ratio:16/9; object-fit:cover; border-radius:4px; background:#e8e8e2; }.showreel-thumbnail-editor input { font-size:11px; }.showreel-thumbnail-editor label { margin-bottom:8px; }
+.showreel-edit-dialog input,.showreel-edit-dialog textarea { box-sizing:border-box; width:100%; border:1px solid #c7c7bd; border-radius:3px; background:#fff; padding:8px; font:14px/1.5 Arial,sans-serif; color:inherit; }.showreel-edit-dialog textarea { resize:vertical; }
+.showreel-edit-dialog fieldset { border:1px solid #deded5; padding:12px; margin:16px 0; }.showreel-edit-dialog legend { padding:0 5px; }.showreel-edit-dialog footer { position:sticky; bottom:-22px; display:flex; justify-content:space-between; align-items:center; gap:12px; background:#fafaf6; padding:12px 0; }.showreel-edit-dialog footer p { margin:0; }
+@media(max-width:500px){.showreel-edit-dialog{padding:16px;}.showreel-edit-fields,.showreel-thumbnail-editor{grid-template-columns:1fr;}.showreel-thumbnail-editor img{max-width:200px;}}
+</style>
+<script>
+  import {mountShowreelEditor} from '../scripts/showreel-editor.js';
+  let dispose:(()=>void)|undefined;
+  function initialize(){dispose?.();dispose=mountShowreelEditor();}
+  initialize();document.addEventListener('astro:page-load',initialize);
+  if(import.meta.hot)import.meta.hot.dispose(()=>{dispose?.();document.removeEventListener('astro:page-load',initialize);});
+</script>

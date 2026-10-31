@@ -1,0 +1,27 @@
+[
+  {
+    "number": "01",
+    "slug": "motion-design",
+    "label": "MOTION DESIGN"
+  },
+  {
+    "number": "02",
+    "slug": "touchdesigner",
+    "label": "TOUCHDESIGNER"
+  },
+  {
+    "number": "03",
+    "slug": "character-design",
+    "label": "CHARACTER DESIGN"
+  },
+  {
+    "number": "04",
+    "slug": "glsl-shaders",
+    "label": "CREATIVE CODING"
+  },
+  {
+    "number": "05",
+    "slug": "live-visual",
+    "label": "LIVE VISUAL"
+  }
+]

@@ -1,0 +1,16 @@
+---
+import { EMBED_ALLOW, embedStyle } from '../lib/media-embed.js';
+import {safeMediaUrl} from '../lib/work-content.js';
+import '../styles/work-embed.css';
+const {block,embed,title,cover}=Astro.props;
+const poster=block.embedPoster||cover;
+---
+<div class="work-embed" data-embed-provider={embed.provider} style={embedStyle(block,embed)}>
+  {block.embedMode==='link' ? <a class="work-project-link" href={embed.url} target="_blank" rel="noopener noreferrer" aria-label={`在 ${embed.label} 查看完整项目（新标签页）`}>
+    {poster&&safeMediaUrl(poster)&&<img src={poster} alt="" loading="lazy" />}
+    <span class="work-project-link-label"><span>{embed.label}</span><strong>查看完整项目 ↗</strong></span>
+  </a> : <>
+    <iframe src={embed.src} title={`${embed.label} · ${title || '作品'}`} loading="lazy" allow={EMBED_ALLOW} allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
+    <a class="work-embed-source" href={embed.url} aria-label={`在 ${embed.label} 查看原内容`}>{embed.label} ↗</a>
+  </>}
+</div>

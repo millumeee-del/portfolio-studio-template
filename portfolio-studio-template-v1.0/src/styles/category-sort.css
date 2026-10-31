@@ -1,0 +1,16 @@
+/* 本地分区排序工具；普通浏览和正式网站保持原目录布局。 */
+.category-sort-toolbar { margin: -6px 0 14px; padding: 10px; background: #f0f1e9; border: 1px solid #deded6; font: 11px/1.6 var(--site-font-family); }
+.category-sort-toolbar[hidden], .category-sort-handle[hidden] { display: none; }
+.category-sort-toolbar p { margin: 0 0 8px; }
+.category-sort-toolbar p.is-error { color: #b33321; }
+.category-sort-toolbar > div { display: flex; flex-wrap: wrap; gap: 6px; }
+.category-sort-toolbar button { padding: 5px 8px; border: 1px solid #cccfc1; background: var(--page-background); color: inherit; font: inherit; cursor: pointer; }
+.category-sort-toolbar button:disabled { opacity: .5; cursor: default; }
+.is-sorting-categories .sidebar-category { position: relative; }
+.is-sorting-categories .sidebar-category-link { padding-right: 30px; }
+.is-sorting-categories .sidebar-works { display: none; }
+.is-sorting-categories .sidebar-category-link { pointer-events: none; }
+.category-sort-handle { position: absolute; right: 0; top: 0; height: 100%; min-width: 28px; padding: 0; border: 0; background: transparent; color: #85877f; font: 20px var(--site-font-family); cursor: grab; touch-action: none; user-select: none; }
+.category-sort-handle:active { cursor: grabbing; }
+.category-sort-moving { opacity: .35; }
+.category-sort-ghost { position: fixed; z-index: 40; pointer-events: none; padding: 10px 12px; border: 1px solid #dca164; background: var(--page-background); color: var(--text-color); box-shadow: 0 3px 14px #0002; font: 600 var(--sidebar-category-size)/1.5 var(--site-font-family); }

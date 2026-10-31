@@ -1,0 +1,14 @@
+.about-free-layout { display:grid; grid-template-columns:minmax(0,1fr); min-height:var(--about-measured-text-bottom,0px); }
+.about-free-layout>.about-portrait-column { grid-area:1 / 1; }
+.about-free-layout::after { content:''; grid-area:1 / 1; height:var(--about-text-desktop-bottom,0px); pointer-events:none; visibility:hidden; }
+.about-text-block { position:absolute; --text-x:var(--text-desktop-x); --text-y:var(--text-desktop-y); --text-width:var(--text-desktop-width); --text-height:var(--text-desktop-height); --text-font:var(--text-desktop-fontSize); left:clamp(calc((var(--sidebar-width) - 100vw + 100cqw) / 2 + 12px),var(--text-x),calc((100vw - var(--sidebar-width) + 100cqw) / 2 - 100% - 24px)); top:var(--text-y); width:var(--text-width); max-width:calc(100vw - var(--sidebar-width) - 24px); min-height:var(--text-height); font-size:var(--text-font); font-weight:var(--text-weight); line-height:var(--text-line); overflow-wrap:anywhere; white-space:pre-wrap; }
+.about-text-content { min-height:1em; }
+.about-text-link { position:absolute; inset:0; }.about-text-block:has(.about-text-link):hover { color:var(--nav-accent); }
+.about-text-block { left:clamp(calc((var(--sidebar-width) - 100vw + 100cqw) / 2 + 12px),var(--text-x),calc((100vw - var(--sidebar-width) + 100cqw) / 2 - min(var(--text-width),100vw - var(--sidebar-width) - 24px) - 24px)); }
+@media(max-width:700px) { .about-free-layout::after { height:var(--about-text-mobile-bottom,0px); }.about-text-block { --text-x:var(--text-mobile-x); --text-y:var(--text-mobile-y); --text-width:var(--text-mobile-width); --text-height:var(--text-mobile-height); --text-font:var(--text-mobile-fontSize); max-width:calc(100vw - 16px); left:clamp(calc((100cqw - 100vw) / 2 + 8px),var(--text-x),calc((100vw + 100cqw) / 2 - min(var(--text-width),100vw - 16px) - 8px)); } }
+@media(max-width:700px) {
+  .about-text-block { font-size:max(12px,calc(var(--text-mobile-fontSize) * (100cqw / 480px))); width:min(100%,var(--text-width)); min-height:0; left:clamp(0px,var(--text-x),calc(100% - min(100%,var(--text-width)))); }
+  body:not(.is-about-shape-editing) .about-text-block { top:var(--about-flow-y,var(--text-y)); }
+  body.is-about-shape-editing .about-text-block { min-height:var(--text-height); }
+  .about-free-layout::after { height:var(--about-measured-text-bottom,var(--about-text-mobile-bottom,0px)); }
+}

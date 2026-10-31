@@ -1,0 +1,74 @@
+---
+import { categories, categoryUrl } from '../data/portfolio';
+const rowCount=categories.length*Math.max(3,Math.ceil(7/categories.length));
+const initialRows=Array.from({length:rowCount},(_,index)=>categories[index%categories.length]);
+function initialRowStyle(index:number) {
+  const distance=((index+rowCount/2)%rowCount)-rowCount/2;
+  return '--wheel-depth:'+Math.min(1,Math.abs(distance)/2.5)+';transform:translate3d(0,calc('+distance+' * var(--wheel-row-height)),0)';
+}
+---
+<div class="category-wheel is-ready" data-category-wheel>
+  <div class="wheel-viewport" data-wheel-viewport tabindex="0" role="group" aria-label="作品分类滚轮" aria-describedby="wheel-instructions">
+    <span class="wheel-pointer" aria-hidden="true"></span>
+    <div class="wheel-track" data-wheel-track data-no-translate>
+      {initialRows.map((category,index) => (
+        <a class:list={["wheel-row", {"is-selected":index===0}]} style={initialRowStyle(index)} data-wheel-row data-wheel-initial-copy={index>=categories.length?'':undefined} aria-hidden={index>=categories.length?'true':undefined} tabindex={index>=categories.length?-1:undefined} data-category={category.slug} href={categoryUrl(category.slug)} draggable="false">
+          <span class="wheel-label" data-wheel-label>{category.label}</span>
+        </a>
+      ))}
+    </div>
+  </div>
+  <span class="wheel-sr-only" id="wheel-instructions">拖动或使用上下方向键选择分类，点击或按回车浏览作品。</span>
+  <span class="wheel-announcement" data-wheel-announcement aria-live="polite" aria-atomic="true"></span>
+</div>
+
+<style>
+
+  /* ===== 滚轮布局规则：外观参数统一在 src/styles/site-settings.css 的 05 区 ===== */
+  .category-wheel {
+
+    width: 100%; max-width: var(--wheel-width); text-align: left;
+    position: relative; left: var(--wheel-offset-x); top: var(--wheel-offset-y);
+    transform: scale(var(--wheel-scale)); transform-origin: left center;
+  }
+  .wheel-viewport { position: relative; cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none; }
+  .wheel-viewport:focus-visible { outline: none; }
+  .wheel-pointer { display: none; position: absolute; top: 50%; left: var(--wheel-pointer-offset-x); width: 0; height: 0; border-top: calc(var(--wheel-pointer-size) * .65) solid transparent; border-bottom: calc(var(--wheel-pointer-size) * .65) solid transparent; border-left: var(--wheel-pointer-size) solid var(--wheel-pointer-color); transform: translateY(-50%); pointer-events: none; }
+  .is-ready .wheel-pointer { display: block; }
+  .wheel-row { display: flex; align-items: center; justify-content: flex-start; min-height: var(--wheel-row-height); padding: 0; color: var(--wheel-text-color); text-decoration: none; white-space: nowrap; font-family: var(--wheel-font-family); font-weight: var(--wheel-font-weight); }
+  .wheel-label { font-family: inherit; font-size: var(--wheel-font-size); font-weight: inherit; letter-spacing: var(--wheel-letter-spacing); }
+  .is-ready .wheel-label { text-align: left; font-size: calc(var(--wheel-font-size) * clamp(var(--wheel-font-min-scale), calc(1 - var(--wheel-depth, 0) * var(--wheel-font-decay)), 1)); }
+  /* 五行循环显示：中间一行对准指针，上下各两行，不足的分类循环补位。 */
+  .is-ready .wheel-viewport { height: calc(5 * var(--wheel-row-height)); }
+  .is-ready .wheel-track { position: absolute; inset: 0; overflow: hidden; mask-image: linear-gradient(to bottom, transparent, #000 var(--wheel-fade-edge), #000 calc(100% - var(--wheel-fade-edge)), transparent); -webkit-mask-image: linear-gradient(to bottom, transparent, #000 var(--wheel-fade-edge), #000 calc(100% - var(--wheel-fade-edge)), transparent); }
+  .is-ready .wheel-row { position: absolute; left: 0; right: 0; top: 50%; height: var(--wheel-row-height); margin-top: calc(var(--wheel-row-height) / -2); opacity: clamp(var(--wheel-edge-opacity), calc(1 - (1 - var(--wheel-edge-opacity)) * var(--wheel-depth, 0) * var(--wheel-opacity-decay)), 1); will-change: transform, opacity; }
+  .wheel-row:active, .wheel-row.is-pressed, .wheel-row.is-clicked { color: var(--wheel-click-color); }
+  @media (hover: hover) {
+    .wheel-row:hover { color: var(--wheel-hover-color, var(--wheel-click-color)); }
+  }
+  .wheel-row:focus-visible .wheel-label { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 7px; }
+  .wheel-row:focus-visible { outline: none; }
+  .is-dragging .wheel-viewport { cursor: grabbing; }
+  .wheel-sr-only, .wheel-announcement { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  @media (max-width: 700px) {
+    .category-wheel { max-width: min(var(--wheel-width), 390px); margin-inline: auto; }
+  }
+</style>
+
+<script>
+  import { mountCategoryWheel } from '../scripts/category-wheel.js';
+  let cleanups: (() => void)[] = [];
+  function disposeWheels() { cleanups.forEach(dispose => dispose()); cleanups = []; }
+  function initializeWheels() {
+    disposeWheels();
+    document.querySelectorAll<HTMLElement>('[data-category-wheel]').forEach(host => cleanups.push(mountCategoryWheel(host)));
+  }
+  initializeWheels();
+  document.addEventListener('astro:page-load', initializeWheels);
+  document.addEventListener('astro:before-swap', disposeWheels);
+  if (import.meta.hot) import.meta.hot.dispose(() => {
+    disposeWheels();
+    document.removeEventListener('astro:page-load', initializeWheels);
+    document.removeEventListener('astro:before-swap', disposeWheels);
+  });
+</script>

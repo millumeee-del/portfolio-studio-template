@@ -1,0 +1,20 @@
+---
+import { workUrl, type Work } from '../data/portfolio';
+import WorkPlaceholder from './WorkPlaceholder.astro';
+import {coverDimensions} from '../lib/cover-dimensions.js';
+interface Props { work: Work; galleryKey?: string; }
+const { work, galleryKey=work.slug } = Astro.props;
+const [ratioWidth, ratioHeight] = (work.aspectRatio || '4 / 3').split('/').map(Number);
+const dimensions = await coverDimensions(work.cover);
+const fallbackRatio = dimensions ? dimensions.width / dimensions.height : ratioWidth > 0 && ratioHeight > 0 ? ratioWidth / ratioHeight : 4 / 3;
+---
+<a class="work-card" href={workUrl(work)} aria-label={`${work.title} — ${work.studio}`} data-work-card data-work-slug={work.slug} data-gallery-key={galleryKey} data-work-title={work.title} data-hidden-from-projects={work.hiddenFromProjects === true ? 'true' : 'false'} data-fallback-ratio={fallbackRatio}>
+  <div class="work-cover" style={work.aspectRatio ? `--work-ratio: ${work.aspectRatio}` : undefined}>
+    {work.cover
+      ? <img src={work.cover} width={dimensions?.width} height={dimensions?.height} alt="" loading="lazy" decoding="async" data-release-thumbnail />
+      : <WorkPlaceholder variant={work.placeholder} />}
+  </div>
+  <div class="work-overlay">
+    <div class="work-caption"><h2 data-i18n-zh={work.title} data-i18n-en={work.titleEn||undefined}>{work.title}</h2><p>{work.studio}</p></div>
+  </div>
+</a>

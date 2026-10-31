@@ -1,0 +1,19 @@
+---
+import PortfolioLayout from '../../../layouts/PortfolioLayout.astro';
+import { categories, works } from '../../../data/portfolio';
+import WorkContent from '../../../components/WorkContent.astro';
+import ProjectBreadcrumbs from '../../../components/ProjectBreadcrumbs.astro';
+import WorkPagination from '../../../components/WorkPagination.astro';
+export function getStaticPaths() {
+  return works.map(work => ({ params: { category: work.category, work: work.slug }, props: { work } }));
+}
+const { work } = Astro.props;
+const category = categories.find(item => item.slug === work.category)!;
+---
+<PortfolioLayout title={work.title} category={category.slug} workSlug={work.slug} isWorkPage>
+  <ProjectBreadcrumbs category={category} workTitle={work.title} workTitleEn={work.titleEn}>
+    {import.meta.env.DEV && <span class="editor-entry"><a href={`/edit/${work.category}/${work.slug}/`}>编辑作品 ↗</a></span>}
+  </ProjectBreadcrumbs>
+  <WorkContent work={work} />
+  <WorkPagination slot="pagination" work={work} />
+</PortfolioLayout>

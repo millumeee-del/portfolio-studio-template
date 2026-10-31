@@ -1,0 +1,26 @@
+{
+  "title": "SHOWREEL",
+  "titleEn": "SHOWREEL",
+  "hint": "拖动圆环，点击年份观看",
+  "hintEn": "Drag to explore. Click a year to watch.",
+  "cards": [
+    {
+      "year": 2026,
+      "label": "2026",
+      "description": "示例动态作品",
+      "descriptionEn": "Sample motion reel"
+    },
+    {
+      "year": 2024,
+      "label": "2024",
+      "description": "示例动态作品",
+      "descriptionEn": "Sample motion reel"
+    },
+    {
+      "year": 2022,
+      "label": "2022",
+      "description": "示例动态作品",
+      "descriptionEn": "Sample motion reel"
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+---
+import type { Work } from '../data/portfolio';
+import { getWorkBlocks } from '../lib/work-content.js';
+import WorkBlock from './WorkBlock.astro';
+import { WORK_DEFAULTS } from '../data/work-defaults.js';
+import { textEdgeStyle } from '../lib/text-edge.js';
+import { canvasHeight, frameStyle, readingOrder, resizeCanvas } from '../lib/work-canvas.js';
+import '../styles/work-canvas.css';
+interface Props { work: Work; }
+const { work } = Astro.props;
+let blocks = getWorkBlocks(work);
+const credit = [work.studio, work.year].filter(Boolean).join(' · ');
+const canvas=work.layoutMode==='canvas';
+const canvasWidth=work.contentWidth||WORK_DEFAULTS.contentWidth;
+if(canvas&&work.canvasWidth&&work.canvasWidth!==canvasWidth){const adapted={canvasWidth:work.canvasWidth,blocks:structuredClone(blocks)};resizeCanvas(adapted,canvasWidth);blocks=adapted.blocks;}
+---
+<article class="work-article" style={`--work-content-width: ${work.contentWidth ?? WORK_DEFAULTS.contentWidth}px`}>
+  <header class="work-intro">
+    <h1 class="page-title" data-i18n-zh={work.title} data-i18n-en={work.titleEn||undefined} data-static-ink style={textEdgeStyle(work.title, 'title')}>{work.title}</h1>
+    <p class="work-credit" data-static-ink style={textEdgeStyle(credit, 'credit')}><span data-translation-source={import.meta.env.DEV?work.studio:undefined}>{work.studio}</span>{work.year&&<> · {work.year}</>}</p>
+  </header>
+  <div class="work-body">
+  {work.summary && <p class="page-subtitle" data-translation-source={import.meta.env.DEV?work.summary:undefined}>{work.summary}</p>}
+  <div class:list={['work-blocks',{'work-canvas':canvas}]} style={canvas?`--canvas-width:${canvasWidth};--canvas-height:${canvasHeight(blocks)}`:undefined}>
+    {(canvas?readingOrder(blocks):blocks).map(block => canvas&&block.layout ? <div class="canvas-frame" data-caption-height={block.captionHeight||0} style={frameStyle(block,canvasWidth)}><WorkBlock block={block} work={work} /></div> : <WorkBlock block={block} work={work} />)}
+  </div>
+  </div>
+</article>
+<script>import {mountLanguageCanvas} from '../scripts/language-canvas.js';mountLanguageCanvas();document.addEventListener('astro:page-load',mountLanguageCanvas);</script>

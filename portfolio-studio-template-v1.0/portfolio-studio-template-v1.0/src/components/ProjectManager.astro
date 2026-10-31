@@ -1,0 +1,72 @@
+---
+import {categories} from '../data/categories.js';
+import '../styles/project-manager.css';
+interface Props { category?: string; }
+const {category} = Astro.props;
+---
+<div data-project-manager data-category={category || ''}>
+  <dialog class="project-manager-dialog" data-create-dialog aria-labelledby="create-project-title">
+    <form data-create-form>
+      <header><h2 id="create-project-title">新增项目</h2><button type="button" data-dialog-close aria-label="关闭">×</button></header>
+      <label>作品名称（中文）<input name="title" required maxlength="160" autocomplete="off" /></label>
+      <label>作品名称（英文）<input name="titleEn" maxlength="240" autocomplete="off" /></label>
+      <label>所属分区<select name="category">{categories.map(item=><option value={item.slug} selected={item.slug===category}>{item.label}</option>)}</select></label>
+      <label>工作室 / 客户署名<input name="studio" maxlength="200" autocomplete="off" /></label>
+      <label>年份<input name="year" maxlength="40" autocomplete="off" /></label>
+      <p class="project-manager-hint">创建后进入作品编辑器，可添加缩略图和作品内容。</p>
+      <p class="project-manager-status" data-create-status role="status" aria-live="polite"></p>
+      <footer><button type="button" data-dialog-close>取消</button><button type="submit" class="project-manager-primary">创建并编辑</button></footer>
+    </form>
+  </dialog>
+  <div class="project-context-menu" data-project-menu role="menu" aria-label="项目操作" hidden>
+    <button type="button" role="menuitem" data-project-create>新增项目</button>
+    <button type="button" role="menuitem" data-category-create>新增分区</button>
+    <button type="button" role="menuitem" data-category-sort>排序分区</button>
+    <button type="button" role="menuitem" data-category-rename hidden>编辑分区名称</button>
+    <button type="button" role="menuitem" class="project-manager-danger" data-category-delete hidden>删除分区</button>
+    <button type="button" role="menuitem" data-project-edit>编辑作品</button>
+    <button type="button" role="menuitem" data-project-visibility hidden>在 Projects 中隐藏</button>
+    <button type="button" role="menuitem" data-project-hidden-list>管理隐藏项目</button>
+    <button type="button" role="menuitem" class="project-manager-danger" data-project-delete>删除项目</button>
+  </div>
+  <dialog class="project-manager-dialog" data-visibility-dialog aria-labelledby="project-visibility-title">
+    <header><h2 id="project-visibility-title">Projects 隐藏项目</h2><button type="button" data-dialog-close aria-label="关闭">×</button></header>
+    <p class="project-manager-hint">这里只控制 ALL PROJECTS 总览的显示；分区、目录和作品内容会保留。</p>
+    <p class="project-manager-status" data-visibility-status role="status" aria-live="polite"></p>
+    <ul class="project-hidden-list" data-hidden-projects></ul>
+    <footer><button type="button" data-dialog-close>关闭</button></footer>
+  </dialog>
+  <dialog class="project-manager-dialog" data-delete-dialog aria-labelledby="delete-project-title">
+    <form data-delete-form>
+      <header><h2 id="delete-project-title">删除项目</h2><button type="button" data-dialog-close aria-label="关闭">×</button></header>
+      <p class="project-delete-name" data-delete-name></p>
+      <p class="project-manager-hint">将从 Projects、所属分区和目录中移除。素材文件会保留，项目数据会自动备份。</p>
+      <p class="project-manager-status" data-delete-status role="status" aria-live="polite"></p>
+      <footer><button type="button" data-dialog-close>取消</button><button type="submit" class="project-manager-delete-confirm" data-delete-confirm disabled>确认删除</button></footer>
+    </form>
+  </dialog>
+  <dialog class="project-manager-dialog" data-category-dialog aria-labelledby="category-dialog-title">
+    <form data-category-form>
+      <header><h2 id="category-dialog-title">新增分区</h2><button type="button" data-dialog-close aria-label="关闭">×</button></header>
+      <label>分区名称<input name="label" required maxlength="80" autocomplete="off" /></label>
+      <p class="project-manager-hint">同步更新左侧目录、分区页面和首页滚轮。</p>
+      <p class="project-manager-status" data-category-status role="status" aria-live="polite"></p>
+      <footer><button type="button" data-dialog-close>取消</button><button type="submit" class="project-manager-primary">保存分区</button></footer>
+    </form>
+  </dialog>
+  <dialog class="project-manager-dialog" data-category-delete-dialog aria-labelledby="category-delete-title">
+    <form data-category-delete-form>
+      <header><h2 id="category-delete-title">删除分区</h2><button type="button" data-dialog-close aria-label="关闭">×</button></header>
+      <p class="project-delete-name" data-category-delete-name></p>
+      <p class="project-manager-hint" data-category-delete-note></p>
+      <label data-category-transfer>将作品移入<select name="destination"><option value="">请选择分区</option></select></label>
+      <p class="project-manager-status" data-category-delete-status role="status" aria-live="polite"></p>
+      <footer><button type="button" data-dialog-close>取消</button><button type="submit" class="project-manager-delete-confirm" data-category-delete-confirm disabled>删除分区</button></footer>
+    </form>
+  </dialog>
+</div>
+<script>
+  import {mountProjectManagers} from '../scripts/project-manager.js';
+  mountProjectManagers();
+  document.addEventListener('astro:page-load', mountProjectManagers);
+</script>

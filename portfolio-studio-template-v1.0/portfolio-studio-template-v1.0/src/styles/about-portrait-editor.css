@@ -1,0 +1,31 @@
+.about-edit-entry { position:fixed; top:96px; right:16px; z-index:20; padding:7px 10px; border:1px solid #d6cbbd; border-radius:4px; background:#fff8ed; color:#8c551f; cursor:pointer; font:12px Arial,sans-serif; }
+.about-edit-entry[hidden],.about-shape-toolbar[hidden] { display:none; }
+.about-portrait-editor [hidden] { display:none!important; }
+.about-shape-overlay { position:absolute; inset:0; z-index:30; pointer-events:none; }
+.about-shape-overlay>svg { position:absolute; inset:0; width:100%; height:100%; overflow:visible; }
+.about-shape-overlay polygon { fill:none; stroke:#ed7c2c; stroke-width:1; vector-effect:non-scaling-stroke; stroke-dasharray:5 3; }
+.about-corner { position:absolute; width:14px; height:14px; transform:translate(-50%,-50%); border:1px solid #ec7921; background:#fffdf7; padding:0; touch-action:none; pointer-events:auto; cursor:move; border-radius:1px; }
+.about-corner span { position:absolute; top:-21px; left:50%; transform:translateX(-50%); color:#ac5a1b; background:#fff8e9; font:10px/1.4 Arial,sans-serif; padding:1px 4px; }
+.about-corner:focus-visible { outline:2px solid #ee713b; outline-offset:4px; }
+.about-shape-guide { position:absolute; pointer-events:none; border-color:#ed36a0; border-style:solid; }.about-shape-guide-x { top:0; bottom:0; border-width:0 0 0 1px; }.about-shape-guide-y { left:0; right:0; border-width:1px 0 0; }
+.about-move-frame { position:absolute; inset:0; z-index:20; border:1px dashed #e18d37; cursor:move; touch-action:none; user-select:none; }
+.about-move-label { position:absolute; top:-27px; left:0; padding:4px 7px; background:#fff8e9; border:1px solid #e18d37; color:#a95d17; white-space:nowrap; font:11px/1.4 Arial,sans-serif; }
+.about-resize-handle { position:absolute; z-index:25; width:12px; height:12px; border:1px solid #287a88; background:#fff; padding:0; touch-action:none; }.about-resize-handle[data-handle=e] { right:-6px; top:calc(50% - 6px); cursor:ew-resize; }.about-resize-handle[data-handle=s] { bottom:-6px; left:calc(50% - 6px); cursor:ns-resize; }.about-resize-handle[data-handle=se] { right:-6px; bottom:-6px; cursor:nwse-resize; background:#287a88; }
+.about-shape-fields[hidden] { display:none; }
+.about-move-frame[data-about-move=copy] { pointer-events:none; }.about-move-frame[data-about-move=copy] .about-move-label,.about-move-frame[data-about-move=copy] button { pointer-events:auto; }
+.about-text-block>.about-move-frame { pointer-events:none; }.about-text-block .about-move-label,.about-text-block .about-resize-handle { pointer-events:auto; }
+.about-text-block.is-selected>.about-move-frame { border:2px dashed #e87925; }
+.about-text-content[contenteditable] { cursor:text; outline:1px dashed #dbba90; outline-offset:4px; }.about-text-content[contenteditable]:focus { outline:2px solid #e87925; }.about-text-content[contenteditable]:empty::before { content:attr(data-placeholder); color:#999; pointer-events:none; }
+.about-text-settings { display:flex; width:100%; gap:10px; flex-wrap:wrap; padding-bottom:12px; border-bottom:1px solid #ded6c8; }.about-text-settings[hidden] { display:none; }.about-text-field select { min-width:0; width:100%; padding:6px; font:inherit; }
+.about-copy [contenteditable] { cursor:text; outline:1px dashed #dbba90; outline-offset:5px; min-height:1em; }.about-copy [contenteditable]:focus { outline:2px solid #e87925; }.about-copy [contenteditable]:empty::before { content:attr(data-placeholder); color:#999; pointer-events:none; }
+.about-shape-fields .about-text-field { width:100%; display:grid; gap:4px; }.about-text-field input,.about-text-field textarea { width:100%; min-width:0; padding:6px; border:1px solid #d6cbbd; border-radius:3px; font:inherit; background:white; }.about-text-field textarea { resize:vertical; }
+.about-shape-toolbar { max-height:calc(100svh - 130px); overflow:auto; }
+.about-position-snap { position:absolute; pointer-events:none; z-index:50; border-color:#ed36a0; border-style:solid; }.about-position-snap-x { top:0; bottom:0; border-width:0 0 0 1px; }.about-position-snap-y { left:0; right:0; border-width:1px 0 0; }
+.about-shape-toolbar { position:fixed; z-index:100; bottom:14px; left:50%; transform:translateX(-50%); width:min(820px,calc(100vw - 24px)); border:1px solid #d6cbbd; border-radius:8px; padding:12px; background:#fffdf8; box-shadow:0 5px 30px #0002; color:#25241f; font:12px/1.5 Arial,"Microsoft YaHei",sans-serif; }
+.about-shape-toolbar header,.about-shape-fields { display:flex; align-items:center; flex-wrap:wrap; gap:8px; }.about-shape-toolbar header strong { margin-right:auto; }.about-shape-toolbar button { padding:6px 9px; border:1px solid #d6cbbd; background:#fff; color:inherit; border-radius:3px; font:inherit; cursor:pointer; }.about-shape-toolbar button:disabled { opacity:.45; cursor:default; }.about-shape-toolbar [data-about-save] { background:#fff0d9; color:#a4550c; }
+.about-shape-fields { margin-top:12px; gap:12px; }.about-shape-fields label { display:flex; align-items:center; gap:5px; }.about-shape-fields input[type=number] { width:64px; padding:4px; border:1px solid #d6cbbd; font:inherit; }.about-shape-fields input[type=range] { width:85px; accent-color:#e87925; }.about-shape-toolbar p { margin:10px 0 0; color:#7b776e; }.about-shape-toolbar p.is-error { color:#b74a38; }
+body.is-about-shape-editing { padding-bottom:190px; }body.is-about-shape-editing .mood-layer { display:none; }
+@media(min-width:701px) { .about-shape-toolbar { left:12px; right:auto; top:110px; bottom:auto; transform:none; width:min(300px,calc(var(--sidebar-width) - 24px)); }.about-shape-toolbar header strong { width:100%; }body.is-about-shape-editing { padding-bottom:0; } }
+@media(max-width:700px) { .about-corner { width:20px; height:20px; }.about-resize-handle { width:18px; height:18px; margin:-3px; }.about-shape-toolbar { padding:10px; bottom:8px; }.about-shape-toolbar header strong { width:100%; }.about-shape-fields { gap:8px 12px; }.about-shape-fields input[type=range] { width:80px; }body.is-about-shape-editing { padding-bottom:260px; } }
+@media(max-width:700px) { .about-edit-entry { top:86px; right:10px; } }
+@media(max-width:700px) { .about-shape-toolbar { max-height:52svh; } }

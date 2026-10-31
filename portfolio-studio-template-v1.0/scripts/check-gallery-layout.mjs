@@ -1,0 +1,33 @@
+import assert from 'node:assert/strict';
+import {validateGalleryLayout,calculateManualGallery,resizeGalleryRow,reorderGallery,legacyGalleryRows} from '../src/lib/gallery-layout.js';
+import {migrateCategory} from '../src/lib/category-management.js';
+const near=(a,b)=>assert.ok(Math.abs(a-b)<.001,`${a} != ${b}`),slugs=['a','b','c','d','e'];
+const layout={cards:Object.fromEntries(slugs.map(slug=>[slug,{span:1/3,height:400}])),rows:[{slugs:['a','b','c'],span:1},{slugs:['d','e'],span:2/3}]};
+const boxes=(l,width=1200)=>calculateManualGallery(l.rows.flatMap(row=>row.slugs).map(slug=>l.cards[slug]),width,16,l.rows.map(row=>({count:row.slugs.length,span:row.span})));
+const initial=boxes(layout),changed=resizeGalleryRow(layout,'a',600,450,1200,16),resized=boxes(changed);
+near(resized.cards[0].width,600);near(resized.cards[1].width,resized.cards[2].width);assert.equal(resized.cards[1].y,0);assert.equal(resized.cards[2].y,0);near(resized.cards[2].x+resized.cards[2].width,1200);near(resized.cards[3].width,initial.cards[3].width);assert.equal(resized.cards[3].y,466);
+const capped=boxes(resizeGalleryRow(layout,'a',5000,400,1200,16,{minRatio:0}));near(capped.cards[1].width,96);near(capped.cards[2].width,96);near(capped.cards[0].width,976);
+const partialLayout=resizeGalleryRow(layout,'d',550,400,1200,16),partial=boxes(partialLayout);
+near(partial.cards[3].width,550);near(partial.cards[4].width,initial.cards[4].width);assert.ok(partial.cards[4].x+partial.cards[4].width>initial.cards[4].x+initial.cards[4].width);
+const expanded=resizeGalleryRow(layout,'e',800,400,1200,16),expandedBoxes=boxes(expanded);
+near(expandedBoxes.cards[4].width,800);near(expandedBoxes.cards[4].x+expandedBoxes.cards[4].width,1200);validateGalleryLayout(expanded,slugs);
+const heightOnly=boxes(resizeGalleryRow(layout,'d',initial.cards[3].width,500,1200,16));near(heightOnly.cards[4].x+heightOnly.cards[4].width,initial.cards[4].x+initial.cards[4].width);
+const savedPartial=validateGalleryLayout(partialLayout,slugs),restoredPartial=boxes(savedPartial);near(restoredPartial.cards[3].width,550);
+const shrunken=resizeGalleryRow(layout,'e',120,400,1200,16),shrunkenBoxes=boxes(shrunken);
+near(shrunkenBoxes.cards[4].width,120);near(shrunkenBoxes.cards[3].width,initial.cards[3].width);assert.deepEqual(shrunken.rows.at(-1).slugs,['d','e']);
+const afterOtherEdit=boxes(resizeGalleryRow(validateGalleryLayout(shrunken,slugs),'a',610,400,1200,16));near(afterOtherEdit.cards[4].width,120);
+const single={cards:{last:{span:.3,height:625}},rows:[{slugs:['last'],span:.3}]};
+const singleShrunk=resizeGalleryRow(single,'last',130,625,1200,16);near(boxes(singleShrunk).cards[0].width,130);near(boxes(validateGalleryLayout(singleShrunk,['last'])).cards[0].width,130);
+const fullTail=resizeGalleryRow({cards:{d:{span:.5,height:400},e:{span:.5,height:400}},rows:[{slugs:['d','e'],span:1}]},'e',180,400,1200,16);near(boxes(fullTail).cards[1].width,180);near(boxes(fullTail).cards[0].width,592);
+const moved=reorderGallery(layout,'a',4);assert.deepEqual(moved.rows.flatMap(row=>row.slugs),['b','c','d','e','a']);assert.deepEqual(moved.rows.map(row=>row.slugs.length),[3,2]);near(boxes(moved).cards[4].x+boxes(moved).cards[4].width,initial.cards[4].x+initial.cards[4].width);
+assert.deepEqual(validateGalleryLayout({cards:{a:{span:.5,height:400}}},['a']),{cards:{a:{span:.5,height:400}}});
+assert.equal(calculateManualGallery([{span:.5,height:400},{span:.5,height:400},{span:.5,height:400}],1200,16).cards[2].y,416);
+assert.deepEqual(legacyGalleryRows({cards:layout.cards}).map(row=>row.slugs),[['a','b','c'],['d','e']]);
+assert.throws(()=>validateGalleryLayout({...layout,rows:[{slugs:['a','a'],span:1}]},slugs));assert.throws(()=>validateGalleryLayout({...layout,rows:[{slugs:['unknown'],span:1}]},slugs));assert.throws(()=>validateGalleryLayout({...layout,rows:[]},slugs));
+for(let i=0,state=structuredClone(layout);i<300;i++){
+  const slug=slugs[i%5];state=i%2?reorderGallery(state,slug,(i*3)%5):resizeGalleryRow(state,slug,(i*97)%1800,120+(i%10)*80,1200,16,{minRatio:0});
+  validateGalleryLayout(state,slugs);const result=boxes(state,i%3?1200:700);assert.ok(result.cards.every(box=>box.width>0&&box.x+box.width<=(i%3?1200:700)+.001));assert.equal(result.cards[0].y,result.cards[2].y);assert.equal(result.cards[3].y,result.cards[4].y);
+}
+const migrated=migrateCategory('source','dest',[{category:'source',slug:'a'},{category:'source',slug:'b'},{category:'dest',slug:'a'}],{source:{cards:{a:{span:.5,height:400},b:{span:.5,height:400}},rows:[{slugs:['b','a'],span:1}]},dest:{cards:{a:{span:1,height:400}}}});
+assert.deepEqual(migrated.layouts.dest.rows.flatMap(row=>row.slugs),['a','b','a-2']);validateGalleryLayout(migrated.layouts.dest,['a','a-2','b']);
+console.log('Gallery checks passed: same-row resizing, minimum widths, sparse row bounds, reorder, responsive layout, legacy data, validation and migration.');

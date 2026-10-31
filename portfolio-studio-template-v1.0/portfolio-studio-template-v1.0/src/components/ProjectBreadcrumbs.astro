@@ -1,0 +1,25 @@
+---
+import { categoryUrl, type CategorySlug } from '../data/portfolio';
+import { textEdgeStyle } from '../lib/text-edge.js';
+interface Props {
+  category?: { slug: CategorySlug; label: string };
+  workTitle?: string;
+  workTitleEn?: string;
+}
+const { category, workTitle, workTitleEn } = Astro.props;
+---
+<header class="project-header" data-project-header>
+<nav class="breadcrumbs" aria-label="页面层级">
+  <ol>
+    {category ? <>
+    <li><a href="/projects/" data-i18n-zh="作品" data-i18n-en="PROJECTS" data-static-ink style={textEdgeStyle('PROJECTS')}>作品</a></li>
+    <li class="breadcrumb-separator" aria-hidden="true">/</li>
+    <li>
+      {workTitle ? <a href={categoryUrl(category.slug)}>{category.label}</a> : <h1 aria-current="page">{category.label}</h1>}
+    </li>
+    {workTitle && <><li class="breadcrumb-separator" aria-hidden="true">/</li><li><span aria-current="page" data-i18n-zh={workTitle} data-i18n-en={workTitleEn||undefined}>{workTitle}</span></li></>}
+    </> : <li><h1 aria-current="page" data-static-ink style={textEdgeStyle('ALL PROJECTS')}>ALL PROJECTS</h1></li>}
+  </ol>
+</nav>
+<div class="project-header-actions"><slot /></div>
+</header>

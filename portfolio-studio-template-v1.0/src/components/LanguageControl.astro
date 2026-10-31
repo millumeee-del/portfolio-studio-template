@@ -1,0 +1,10 @@
+---
+import '../styles/site-language.css';
+---
+<div class="language-controls" data-no-translate>
+  <button type="button" class="language-switch" data-header-item="language" data-language-switch aria-label="Switch to English"><span class="language-full">中 / EN</span><span class="language-compact" data-language-compact>中</span></button>
+  {import.meta.env.DEV&&<button type="button" class="translation-edit-entry" data-header-item="translation" data-translation-open>译文微调</button>}
+</div>
+<p class="language-status" data-language-status data-no-translate role="status" hidden></p>
+{import.meta.env.DEV&&<dialog class="translation-dialog" data-translation-dialog data-no-translate aria-label="英文译文微调"><header><h2>英文译文微调</h2><button type="button" data-translation-close aria-label="关闭译文微调">×</button></header><p>作品英文标题也可在「编辑作品 → 作品信息」单独填写。这里可微调简介、正文、说明及 About 文字；自动翻译已关闭，请手动填写英文。每篇帖子独立保存，不影响其他帖子。</p><div class="translation-actions"><button type="button" data-translation-save>保存译文</button></div><p data-translation-editor-status role="status"></p><div data-translation-fields></div></dialog>}
+{import.meta.env.DEV&&<script>import '../scripts/translation-editor.js';</script>}

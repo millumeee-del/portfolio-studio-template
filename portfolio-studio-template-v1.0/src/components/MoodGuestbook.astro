@@ -1,0 +1,34 @@
+---
+import {site} from '../data/site.js';
+import {MOOD_STICKERS,MOOD_SETTINGS} from '../lib/mood-stickers.js';
+import '../styles/mood-guestbook.css';
+---
+<aside data-moods-enabled={import.meta.env.DEV||site.sharedMoods?'true':'false'} class="mood-guestbook" data-mood-guestbook data-local={import.meta.env.DEV ? 'true' : undefined} hidden>
+  <div class="mood-dock" data-header-item="moods">
+    <button class="mood-visibility" data-mood-toggle aria-label="隐藏心情贴纸" aria-pressed="true" title="显示 / 隐藏心情贴纸"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></button>
+    <button class="mood-entry" data-mood-open aria-label="留下你的心情" title="留下你的心情"><span class="mood-entry-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2v20M2 12h20M5 5l14 14M5 19 19 5"/></svg></span><span class="mood-entry-label">留下你的心情</span></button>
+  </div>
+  <div class="mood-layer" data-mood-layer aria-label="访客心情贴纸"></div>
+  <div class="mood-placement" data-mood-placement hidden>
+    <button data-mood-edit>修改</button><button data-mood-cancel>取消</button><button class="mood-primary" data-mood-publish>贴在这里</button><button class="mood-delete" data-mood-delete>删除</button>
+  </div>
+  <p class="mood-toast" data-mood-toast role="status" hidden></p>
+  <dialog class="mood-dialog" data-mood-dialog aria-labelledby="mood-title">
+    <div class="mood-dialog-header"><div><p class="mood-eyebrow">A LITTLE TRACE OF YOU</p><h2 id="mood-title">留下你的心情</h2></div><button class="mood-close" data-mood-close aria-label="关闭">×</button></div>
+    <p class="mood-hint">挑一张贴纸，留一句话，把今天的心情贴在这里。</p>
+    <form data-mood-form>
+      <div class="mood-pack" role="group" aria-label="选择心情贴纸">
+        {MOOD_STICKERS.map((item,index)=><button type="button" data-mood-sticker={item.id} aria-label={item.label} aria-pressed={index===0} title={item.label}><svg viewBox="0 0 100 100" aria-hidden="true" set:html={item.svg}/></button>)}
+      </div>
+      <label class="mood-label">想说的话 <span>可不填</span><textarea name="message" rows="3" maxlength={MOOD_SETTINGS.maxText} placeholder="今天也有一点点开心…"></textarea></label>
+      <div class="mood-form-row"><label class="mood-label">怎么称呼你 <span>可不填</span><input name="nickname" maxlength={MOOD_SETTINGS.maxNickname} autocomplete="nickname" placeholder="一位路过的朋友"/></label><label class="mood-label mood-size-label">贴纸大小<input name="size" type="range" min={MOOD_SETTINGS.minSize} max={MOOD_SETTINGS.maxSize} value={MOOD_SETTINGS.defaultSize}/></label></div>
+      <label class="mood-trap" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"/></label>
+      <p class="mood-public-note">贴上后，其他访客也能在本页看到。请不要填写私人联系方式。</p>
+      {import.meta.env.DEV && <p class="mood-local-note">本地预览：这里的测试留言不会上传到线上。</p>}
+      <button class="mood-primary mood-next" type="submit">去选一个位置 <span aria-hidden="true">↗</span></button>
+    </form>
+    <div class="mood-mine" data-mood-mine></div>
+    {import.meta.env.DEV && <details class="mood-admin"><summary>管理留言（仅本地可见）</summary><p class="mood-hint">当前为本地测试留言。线上留言可通过「管理线上留言.cmd」查看和移除。</p><button type="button" data-mood-admin-load>查看本地留言</button><div data-mood-admin-list></div></details>}
+  </dialog>
+</aside>
+<script>import '../scripts/mood-guestbook.js';</script>

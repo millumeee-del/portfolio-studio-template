@@ -1,0 +1,1 @@
+export const socialLinks=[{name:'Email',icon:'/icons/mail.svg',href:'mailto:hello@example.com'},{name:'Portfolio',icon:'/icons/link.svg',href:'https://example.com'},{name:'GitHub',icon:'/icons/code.svg',href:'https://github.com'},{name:'Contact placeholder',icon:'/icons/chat.svg',href:''},{name:'More',icon:'/icons/star.svg',href:''}];

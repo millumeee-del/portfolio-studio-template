@@ -1,0 +1,12 @@
+---
+import PortfolioLayout from '../../../layouts/PortfolioLayout.astro';
+import { works } from '../../../data/portfolio';
+import VisualWorkEditor from '../../../components/VisualWorkEditor.astro';
+export function getStaticPaths() {
+  return import.meta.env.DEV ? works.map(work=>({params:{category:work.category,work:work.slug},props:{work}})) : [];
+}
+const { work }=Astro.props;
+---
+<PortfolioLayout title={`编辑 ${work.title}`} category={work.category} workSlug={work.slug}>
+  <VisualWorkEditor work={work} />
+</PortfolioLayout>

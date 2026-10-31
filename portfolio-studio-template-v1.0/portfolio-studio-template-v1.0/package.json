@@ -1,0 +1,28 @@
+{
+  "name": "portfolio-studio-template",
+  "type": "module",
+  "version": "1.0.0",
+  "engines": {
+    "node": ">=22.18.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "test": "node --test scripts/*.test.mjs",
+    "audit:share": "node scripts/audit-share.mjs",
+    "demo:generate": "node scripts/generate-demo.mjs"
+  },
+  "dependencies": {
+    "astro": "7.3.8",
+    "sharp": "0.35.5",
+    "three": "0.183.2"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2",
+    "miniflare": "5.20261019.1-beta"
+  },
+  "private": true,
+  "license": "MIT",
+  "description": "Editable bilingual creative portfolio starter"
+}

@@ -1,0 +1,27 @@
+---
+import PortfolioLayout from '../layouts/PortfolioLayout.astro';
+import { about } from '../data/about.js';
+import portrait from '../data/about-portrait.json';
+import {aboutPortraitStyle} from '../lib/about-portrait.js';
+import AboutPortraitEditor from '../components/AboutPortraitEditor.astro';
+import '../styles/about.css';
+import {getAboutTextBlocks,aboutTextStyle,aboutTextPageStyle} from '../lib/about-text.js';
+import '../styles/about-text.css';
+const blocks=getAboutTextBlocks(portrait,about);
+---
+<PortfolioLayout title="About" current="about">
+  <article class="about-page about-free-layout" aria-label="About" data-about-page style={aboutPortraitStyle(portrait)+aboutTextPageStyle(blocks)}>
+    <div class="about-portrait-column">
+      <figure class="about-portrait" data-about-portrait data-portrait-layout={JSON.stringify(portrait)}>
+        <div class="about-portrait-mask"><img src={'imageSrc' in portrait?portrait.imageSrc:'/contacts/avatar.png'} width="1182" height="1332" alt="studio 的头像" decoding="async" fetchpriority="high" /></div>
+        {import.meta.env.DEV && <AboutPortraitEditor />}
+      </figure>
+    </div>
+    {blocks.map(block=><div class="about-text-block" data-about-block={block.id} style={aboutTextStyle(block)}><div class="about-text-content" data-about-block-content data-translation-source={import.meta.env.DEV?block.text:undefined}>{block.text}</div>{block.href&&<a class="about-text-link" href={block.href} aria-label={block.text} target={block.href.startsWith('http')?'_blank':undefined} rel="noopener noreferrer"></a>}</div>)}
+  </article>
+</PortfolioLayout>
+<script>
+  import {mountAboutTextFlow,disposeAboutTextFlow} from '../scripts/about-text-flow.js';
+  mountAboutTextFlow();document.addEventListener('astro:page-load',mountAboutTextFlow);document.addEventListener('astro:before-swap',disposeAboutTextFlow);
+  if(import.meta.hot)import.meta.hot.dispose(()=>{disposeAboutTextFlow();document.removeEventListener('astro:page-load',mountAboutTextFlow);document.removeEventListener('astro:before-swap',disposeAboutTextFlow);});
+</script>

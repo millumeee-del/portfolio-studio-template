@@ -1,0 +1,47 @@
+---
+import {site} from '../data/site.js';
+import PortfolioSidebar from '../components/PortfolioSidebar.astro';
+import type { CategorySlug } from '../data/portfolio';
+import '../styles/portfolio.css';
+import ProjectManager from '../components/ProjectManager.astro';
+import SiteNav from '../components/SiteNav.astro';
+import SocialIcons from '../components/SocialIcons.astro';
+import MoodGuestbook from '../components/MoodGuestbook.astro';
+import LanguageHead from '../components/LanguageHead.astro';
+interface Props { showreelDirectory?: boolean; title: string; category?: CategorySlug; workSlug?: string; current?: 'projects' | 'showreel' | 'about'; isWorkPage?: boolean; }
+const { showreelDirectory = false, title, category, workSlug, current = 'projects', isWorkPage = false } = Astro.props;
+---
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title} | {site.name}</title>
+    <LanguageHead />
+    <link rel="icon" href="/favicon.svg" />
+    {import.meta.env.DEV && <script is:inline>
+      // 文件保存触发开发服务器刷新时，继续完成用户刚创建项目的跳转。
+      try {
+        const key = 'studio-project-navigation';
+        const pending = JSON.parse(sessionStorage.getItem(key) || 'null');
+        if (pending && pending.expires > Date.now() && /^(?:\/edit\/[a-z0-9-]+\/[a-z0-9-]+\/|\/projects\/(?:[a-z0-9-]+\/)?)$/.test(pending.path)) {
+          if (location.pathname !== pending.path) location.replace(pending.path);
+        } else sessionStorage.removeItem(key);
+      } catch {}
+    </script>}
+  </head>
+  <body class:list={{ 'work-detail-page': isWorkPage, 'showreel-page': current === 'showreel', 'showreel-directory-page': showreelDirectory, 'has-spacious-footer': current === 'about' || (current === 'projects' && !isWorkPage) }}>
+    <a class="skip-link" href="#main-content">跳到作品内容</a>
+    <SiteNav active={current === 'projects' || current === 'about' ? current : null} />
+    <PortfolioSidebar category={category} workSlug={workSlug} current={current} />
+    <main class="portfolio-main" id="main-content">
+      <div class="portfolio-content"><slot /></div>
+      <div class="portfolio-page-end">
+        <slot name="pagination" />
+        <SocialIcons followHome={current === 'about'} />
+      </div>
+    </main>
+    {import.meta.env.DEV && <ProjectManager category={category} />}
+    <MoodGuestbook />
+  </body>
+</html>

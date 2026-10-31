@@ -1,0 +1,109 @@
+---
+import {site} from '../data/site.js';
+import { categories, categoryUrl, projectWorks, workUrl, getCategoryWorks, type CategorySlug } from '../data/portfolio';
+import '../styles/portfolio-sidebar.css';
+import '../styles/category-sort.css';
+interface Props { category?: CategorySlug; workSlug?: string; current?: 'projects' | 'showreel' | 'about'; }
+const { category, workSlug, current = 'projects' } = Astro.props;
+---
+<aside class="portfolio-sidebar" data-portfolio-sidebar>
+  <div class="sidebar-heading">
+    <a class="sidebar-brand" href="/"><span class="sidebar-brand-name" data-no-translate>{site.name}</span><span class="sidebar-tagline" data-i18n-zh={site.taglineZh} data-i18n-en={site.taglineEn}>{site.taglineZh}</span></a>
+    <button class="sidebar-toggle" type="button" aria-expanded="false" aria-controls="portfolio-directory" hidden>目录 <span aria-hidden="true">+</span></button>
+  </div>
+  <div class="sidebar-directory" id="portfolio-directory">
+    <nav class="sidebar-main-nav" aria-label="页面导航">
+      <a href="/">Home <span aria-hidden="true">↗</span></a>
+      <a href="/projects/" class:list={{ 'is-active': current === 'projects' && !category }} aria-current={current === 'projects' && !category ? 'page' : undefined}>Projects <span>{String(projectWorks.length).padStart(2, '0')}</span></a>
+      <a href="/showreel/" class:list={{ 'is-active': current === 'showreel' }} aria-current={current === 'showreel' ? 'page' : undefined}>Showreel <span aria-hidden="true">↗</span></a>
+    </nav>
+    <nav class="sidebar-categories" data-category-directory aria-label="作品分类与目录">
+      <p class="sidebar-section-label" data-category-index>PROJECT INDEX</p>
+      {import.meta.env.DEV && <div class="category-sort-toolbar" data-category-sort-toolbar hidden>
+        <p data-category-sort-status role="status" aria-live="polite">拖动右侧手柄调整顺序</p>
+        <div><button type="button" data-category-sort-save>保存排序</button><button type="button" data-category-sort-cancel>取消</button></div>
+      </div>}
+      {categories.map(item => (
+        <div class="sidebar-category">
+          <a class:list={['sidebar-category-link', { 'is-active': category === item.slug }]} data-category-slug={item.slug} data-category-label={item.label} href={categoryUrl(item.slug)} aria-current={category === item.slug && !workSlug ? 'page' : undefined} aria-expanded={category === item.slug ? 'true' : undefined} aria-controls={category === item.slug ? `sidebar-works-${item.slug}` : undefined}>
+            <span class="sidebar-number">{item.number}</span><span>{item.slug === 'touchdesigner' ? <span data-no-translate>TOUCHD<span class="touchdesigner-kern">E</span>SIGNER</span> : item.label}</span>
+          </a>
+          {import.meta.env.DEV && <button type="button" class="category-sort-handle" data-category-sort-handle aria-label={`拖动排序 ${item.label}`} title="拖动排序；也可按 ↑ / ↓ 移动" hidden>⠿</button>}
+          {category === item.slug && <ol class="sidebar-works" id={`sidebar-works-${item.slug}`}>
+            {getCategoryWorks(item.slug).map((work, index) => (
+              <li><a href={workUrl(work)} data-project-category={work.category} data-work-slug={work.slug} data-work-title={work.title} data-hidden-from-projects={work.hiddenFromProjects === true ? 'true' : 'false'} class:list={{ 'is-active': workSlug === work.slug }} aria-current={workSlug === work.slug ? 'page' : undefined}><span>{String(index + 1).padStart(2, '0')}</span><span data-i18n-zh={work.title} data-i18n-en={work.titleEn||undefined}>{work.title}</span></a></li>
+            ))}
+          </ol>}
+        </div>
+      ))}
+    </nav>
+    <a class="sidebar-home" href="/">← Back to home</a>
+  </div>
+</aside>
+<script>
+  import {orderGalleryKeys} from '../lib/gallery-order.js';
+  const initialized = new WeakSet();
+  // 预览、撤销、取消和保存都会重画画廊；仅同步当前分区，保留目录的折叠状态。
+  function syncWorkOrder(event: Event) {
+    const grid = event.target;
+    if (!(grid instanceof HTMLElement) || grid.dataset.galleryVariant !== 'category') return;
+    document.querySelectorAll<HTMLOListElement>('.sidebar-works').forEach(list => {
+      const entries = [...list.querySelectorAll<HTMLAnchorElement>('a[data-work-slug]')];
+      if (!entries.length || entries[0].dataset.projectCategory !== grid.dataset.galleryCategory) return;
+      const bySlug = new Map(entries.map(link => [link.dataset.workSlug!, link]));
+      const keys = [...grid.querySelectorAll<HTMLElement>('[data-work-card]')].map(card => card.dataset.workSlug!);
+      const order = orderGalleryKeys([...keys, ...bySlug.keys()], null);
+      order.forEach((slug, index) => {
+        const link = bySlug.get(slug);
+        if (!link) return;
+        link.querySelector('span')!.textContent = String(index + 1).padStart(2, '0');
+        const item = link.closest('li')!;
+        if (list.children[index] !== item) list.insertBefore(item, list.children[index] ?? null);
+      });
+    });
+  }
+  function initializeDirectories() {
+    document.querySelectorAll<HTMLElement>('[data-portfolio-sidebar]').forEach(sidebar => {
+      if (initialized.has(sidebar)) return;
+      initialized.add(sidebar);
+      const button = sidebar.querySelector<HTMLButtonElement>('.sidebar-toggle')!;
+      button.hidden = false;
+      sidebar.classList.add('is-enhanced');
+      function setOpen(open: boolean) { sidebar.classList.toggle('is-open', open); button.setAttribute('aria-expanded', String(open)); }
+      button.addEventListener('click', () => setOpen(!sidebar.classList.contains('is-open')));
+      sidebar.addEventListener('keydown', event => { if (event.key === 'Escape') { setOpen(false); button.focus(); } });
+      sidebar.querySelectorAll<HTMLAnchorElement>('.sidebar-category-link[aria-controls]').forEach(link => {
+        const list = document.getElementById(link.getAttribute('aria-controls')!);
+        if (!list) return;
+        link.addEventListener('click', event => {
+          // 当前分区再次点击只折叠目录；其他分区及修饰键点击仍正常跳转。
+          if (event.defaultPrevented || event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey || sidebar.classList.contains('is-sorting-categories')) return;
+          event.preventDefault();
+          list.hidden = !list.hidden;
+          link.setAttribute('aria-expanded', String(!list.hidden));
+        });
+      });
+    });
+  }
+  initializeDirectories();
+  document.addEventListener('astro:page-load', initializeDirectories);
+  document.addEventListener('gallery:render', syncWorkOrder, true);
+  if (import.meta.hot) import.meta.hot.dispose(() => {
+    document.removeEventListener('astro:page-load', initializeDirectories);
+    document.removeEventListener('gallery:render', syncWorkOrder, true);
+  });
+</script>
+{import.meta.env.DEV && <script>
+  import { mountCategorySort } from '../scripts/category-sort.js';
+  let dispose: (() => void) | undefined;
+  function initialize() { dispose?.(); dispose = mountCategorySort(); }
+  function cleanup() { dispose?.(); dispose = undefined; }
+  initialize();
+  document.addEventListener('astro:page-load', initialize);
+  document.addEventListener('astro:before-swap', cleanup);
+  if (import.meta.hot) import.meta.hot.dispose(() => {
+    cleanup();
+    document.removeEventListener('astro:page-load', initialize);
+    document.removeEventListener('astro:before-swap', cleanup);
+  });
+</script>}

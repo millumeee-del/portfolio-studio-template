@@ -1,0 +1,310 @@
+/*
+ * 网站外观设置：日常调字号、间距、位置、颜色，优先只改这一份文件。
+ * 本次整理保留了现有数值。Ctrl+F 搜索中文说明或参数名即可。
+ * 正文默认宽度（1000px）：src/data/work-defaults.js。
+ * 单件作品的位置 / 尺寸：使用网页里的画布编辑器。
+ * 动画速度与鼠标手感：见 docs/参数速查.md 的交互参数索引。
+ * 下方 06 区是平板 / 手机覆盖值；手机上没变化时，检查该区。
+ */
+
+/* ===== 01 首页位置、标题与全站联系图标 ===== */
+:root {
+  --home-title-font-size: 72px; /* 首页 studio 标题字号，越大文字越大 */
+  --home-text-color: #161616; /* 首页基础文字颜色 */
+  --home-title-letter-spacing: -2px; /* 首页标题字间距 */
+  --home-character-scale: 1.02; /* 小人缩放：1 = 原大小，1.12 = 放大 12% */
+  --home-character-width: 100%; /* 小人取景区域宽度，手机端加宽可放大人物 */
+  --home-hero-offset-y: -35px; /* 小人 + 滚轮整体上下移动：负数向上，正数向下 */
+  --home-character-offset-x: 18px; /* 只微调小人左右位置：正数向右，负数向左 */
+  --home-character-offset-y: 0px; /* 只微调小人：负数向上 */
+  --home-character-handoff-ms: 180; /* 静态预览接入 3D 的过渡时长（毫秒）；0 为直接切换 */
+  --home-model-picker-left: 0px; /* 本地模型竖条默认左右位置；手动排版可直接拖动 */
+  --home-model-picker-top: 18%; /* 默认上下位置 */
+  --home-model-picker-width: 48px; /* 竖条点击区域宽度 */
+  --home-model-picker-height: 160px; /* 竖条默认高度，圆点均匀分布 */
+  --home-model-dot-size: 18px; /* 圆点直径，拉高竖条时保持不变 */
+  --home-model-switch-color-1: #161616; /* 模型 1：黑 */
+  --home-model-switch-color-2: #ffffff; /* 模型 2：白 */
+  --home-model-switch-color-3: #25b432; /* 模型 3：绿 */
+  --intro-offset-x: 40px; /* 滚轮 + SHOWREEL 左右位置：正数向右 */
+  --intro-offset-y: -20px; /* 滚轮 + SHOWREEL 单独上下微调：负数向上 */
+  --showreel-gap: 48px; /* 滚轮与 SHOWREEL 按钮间距 */
+  --home-social-size: 65px; /* 圆角方块的宽度和高度 */
+  --home-social-art-size: 56px; /* 方块内图标图片大小（素材自带透明留白） */
+  --home-social-gap: 15px; /* 五个图标之间的间距 */
+  --home-social-radius: 10px; /* 圆角大小 */
+  --home-social-border-color: #bdbdb8; /* 边框颜色 */
+  --home-social-top-gap: 16px; /* 首页主体到底部图标；内页间距见本文件 04 区 */
+  --home-social-bottom-space: 40px; /* 图标下方到页面底部的留白 */
+  --home-title-top-gap: 45px; /* 首页标题上方间距 */
+  --home-title-bottom-gap: 10px; /* 首页标题下方间距 */
+  --home-hero-max-width: 1100px; /* 首页小人和滚轮区域最大宽度 */
+  --home-hero-min-height: 520px; /* 首页主体区域最小高度 */
+  --home-hero-column-gap: 30px; /* 小人与滚轮两列之间的间距 */
+  --home-hero-padding: 20px; /* 首页主体区域内边距 */
+  --home-character-height: clamp(500px, calc(100svh - 270px), 860px); /* 人物显示区域高度；保持原有自适应表达式 */
+  --showreel-font-size: 18px; /* 首页 SHOWREEL 按钮字号 */
+  --showreel-padding: 17px 22px; /* SHOWREEL 按钮上下 / 左右内边距 */
+  --showreel-radius: 5px; /* SHOWREEL 按钮圆角 */
+  --showreel-background: #ffca21; /* SHOWREEL 按钮底色 */
+}
+
+/* ===== 02 全站顶部 Home / Projects / About 导航 ===== */
+:root {
+  --site-nav-font-size: 24px; /* 导航字号 */
+  --site-nav-color: #161616; /* 顶部导航文字颜色 */
+  --site-nav-bottom-space: 0px; /* 导航文字下方留白：越大，下方内容越往下 */
+  --site-nav-top-space: 30px; /* 导航距页面顶部的距离 */
+  --site-nav-link-gap: 54px; /* Home / Projects / About 各链接之间的距离 */
+  --site-nav-line-height: 1.125;
+  --site-nav-underline-gap: 9px;
+  --site-nav-underline-width: 3px;
+  --site-nav-height: calc(var(--site-nav-top-space) + var(--site-nav-font-size) * var(--site-nav-line-height) + var(--site-nav-underline-gap) + var(--site-nav-underline-width) + var(--site-nav-bottom-space));
+}
+
+/* ===== 03 内页左侧目录 ===== */
+:root {
+  --sidebar-desktop-width: 300px; /* 电脑侧栏宽度 */
+  --sidebar-tablet-width: 220px; /* 平板侧栏宽度 */
+  --sidebar-padding-top: 34px; /* 顶部留白，独立于 Home / Projects */
+  --sidebar-padding-x: 22px; /* 左右留白 */
+  --sidebar-padding-bottom: 28px;
+  --sidebar-brand-size: 38px; /* studio 字号 */
+  --sidebar-brand-weight: 800;
+  --sidebar-brand-letter-spacing: -.055em;
+  --sidebar-brand-height-scale: 1.08; /* studio 字形纵向比例：1 原高，1.15 加高 15% */
+  --sidebar-tagline-size: 12px; /* 动态 · 系统 · 现场 / MOTION · SYSTEMS · LIVE 字号 */
+  --sidebar-tagline-gap: 11px; /* 标志到副标题的间距 */
+  --sidebar-main-top-gap: 48px; /* 副标题到 Home 的间距 */
+  --sidebar-main-size: 14px; /* Home / Projects / Showreel 字号 */
+  --sidebar-main-line-height: 1.5;
+  --sidebar-main-row-height: 36px; /* 这三行各自高度 */
+  --sidebar-main-row-gap: 4px; /* 这三行之间的间隔 */
+  --sidebar-main-mark-size: 10px; /* 右侧箭头 / 数量字号 */
+  --sidebar-index-top-gap: 43px; /* 主菜单到 PROJECT INDEX 的间距 */
+  --sidebar-index-size: 10px; /* PROJECT INDEX 字号 */
+  --sidebar-index-bottom-gap: 17px; /* INDEX 到第一个分区的间距 */
+  --sidebar-category-size: 11px; /* 分区名称字号 */
+  --sidebar-category-weight: 600;
+  --sidebar-category-line-height: 1.5;
+  --sidebar-category-padding-y: 10px; /* 分区每行上下内边距 */
+  --sidebar-category-gap: 8px; /* 分区组之间间距 */
+  --sidebar-category-number-size: 9px; /* 分区序号字号 */
+  --sidebar-number-width: 18px; /* 序号栏宽度 */
+  --sidebar-item-gap: 9px; /* 序号与名称之间的距离 */
+  --sidebar-work-size: 11px; /* 分区内作品名字号 */
+  --sidebar-work-number-size: 9px; /* 作品序号字号 */
+  --sidebar-work-line-height: 1.6;
+  --sidebar-work-padding-y: 7px; /* 每件作品上下内边距 */
+  --sidebar-work-indent: 26px; /* 作品列表缩进 */
+  --sidebar-work-top-gap: 5px;
+  --sidebar-work-bottom-gap: 12px;
+  --sidebar-back-size: 11px; /* Back to home 字号 */
+  --sidebar-back-top-gap: 46px;
+  --sidebar-mobile-brand-size: 24px;
+  --sidebar-mobile-item-size: 12px;
+  --sidebar-tablet-padding-x: 18px;
+  --sidebar-mobile-padding-y: 22px;
+  --sidebar-mobile-padding-x: 16px;
+  --sidebar-mobile-tagline-size: 8px;
+  --sidebar-mobile-tagline-gap: 5px;
+  --sidebar-mobile-main-top-gap: 24px;
+  --sidebar-mobile-index-top-gap: 25px;
+  --sidebar-mobile-back-top-gap: 20px;
+}
+
+/* ===== 04 Projects、分区、作品详情与页底 ===== */
+:root {
+  --site-font-family: Arial, Helvetica, sans-serif; /* 首页滚轮之外的统一字体 */
+  --sidebar-width: var(--sidebar-desktop-width); /* 左侧目录宽度 */
+  --page-padding: 28px; /* 作品区四周留白 */
+  --gallery-row-height: 260px; /* 缩略图统一行高 */
+  --gallery-min-items: 4; /* 桌面每行优先最少 4 个作品 */
+  --gallery-max-items: 5; /* 桌面每行最多 5 个作品 */
+  --gallery-gap: 16px; /* 卡片间距 */
+  --gallery-wrap-min-ratio: .5; /* 编辑时低于此宽/高比的卡片换到下一行：.5 = 1:2 */
+  --overview-gallery-use-custom: 1; /* 使用 ALL PROJECTS 编辑器保存的桌面排版 */
+  /* ===== 分区画廊：独立于 Projects 总览 ===== */
+  --category-gallery-row-height: 400px; /* 分区电脑端固定行高 */
+  --category-gallery-small-items: 2; /* 1–4 件作品时，每行最多数量 */
+  --category-gallery-items: 3; /* 5–9 件作品时，每行最多数量 */
+  --category-gallery-dense-items: 4; /* 10 件及以上时，每行最多数量 */
+  --category-gallery-sparse-max-width: 720px; /* 只有 1–2 件时，单卡最大宽度 */
+  --category-gallery-use-custom: 1; /* 使用分区编辑器保存的桌面排版 */
+  /* ===== 导览 / 标题 / 署名统一参数 ===== */
+  --breadcrumbs-font-size: 20px; /* 各级顶部导览字号 */
+  --breadcrumbs-mobile-font-size: 16px; /* 手机端导览字号 */
+  --breadcrumbs-line-height: 1.35; /* 导览文字行高 */
+  --breadcrumbs-row-height: 32px; /* 共用导览栏最小高度 */
+  --breadcrumbs-item-gap: 8px; /* Projects、斜杠、分类之间的间距 */
+  --breadcrumbs-bottom-space: 30px; /* 导览栏到下方内容的距离 */
+  --work-title-font-size: 60px; /* 电脑端作品大标题字号：直接改数字 */
+  --work-title-mobile-font-size: 27px; /* 手机端作品大标题实际字号 */
+  --work-title-font-weight: 700; /* 作品标题粗细：700 为粗体 */
+  --work-title-letter-spacing: -0.01em; /* 作品标题字距：正数更宽 */
+  --work-title-line-height: 1.1; /* 作品大标题行高 */
+  --work-credit-font-size: 24px; /* 工作室与年份共用字号 */
+  --work-credit-line-height: 1.5; /* 工作室与年份行高 */
+  --work-title-credit-gap: 5px; /* 标题与署名之间的间距 */
+  --work-info-bottom-space: 12px; /* 标题署名区到简介的间距；简介自身的上边距也沿用此值 */
+  --work-summary-font-size: 18px; /* 作品简介字号，正式页与编辑预览共用 */
+  --work-summary-color: #000000; /* 作品简介颜色 */
+  --work-summary-line-height: 1.8; /* 作品简介文字行高 */
+  --work-summary-content-gap: 40px; /* 简介底部到正文起点的固定距离；第一张素材 Y=0 */
+  --about-content-width: 1120px; /* About 头像＋简介整体最大宽度 */
+  --about-column-gap: 80px; /* 左侧头像与右侧简介之间的距离 */
+  --about-top-space: 42px; /* About 整体距上方内容的距离 */
+  --about-copy-top-space: 55px; /* 简介相对头像顶部向下偏移 */
+  --about-title-font-size: 42px; /* About 标题字号 */
+  --about-email-top-space: 54px; /* 简介到邮箱的距离 */
+  --about-font-size: 16px; /* About 正文字号 */
+  --about-line-height: 1.8; /* About 正文行高 */
+  --about-title-gap: 40px; /* About 标题到简介的距离 */
+  --about-paragraph-gap: 20px; /* About 简介段落之间的距离 */
+  --work-caption-font-size: 12px; /* 素材说明字号，正式页与预览共用 */
+  --work-caption-line-height: 1.6; /* 多行素材说明的行高 */
+  --work-caption-letter-spacing: 0em; /* 素材说明字间距 */
+  --work-caption-top-gap: 8px; /* 图片 / 视频到说明文字的距离 */
+  --work-caption-align: left; /* 说明默认对齐：left / center / right，与图片位置独立 */
+  --work-caption-color: #797c72; /* 素材说明颜色 */
+  --work-pagination-color: #159d8c; /* 页底 prev / next 颜色 */
+  --work-pagination-gap: 5px; /* prev、斜杠、next 之间的距离 */
+  --portfolio-footer-top-gap: 34px; /* 页面内容到页底联系区 / 翻页的间距 */
+  --portfolio-list-footer-gap: 96px; /* Projects、分区及 About 内容到联系图标的留白 */
+  --work-pagination-social-gap: 70px; /* prev / next 到下方联系图标的间距 */
+  --work-pagination-height: 44px; /* 翻页导航占用高度 */
+  --card-overlay-opacity: .58; /* 悬停黑色遮罩：0 透明，1 全黑 */
+  --card-title-size: 22px; /* 悬停标题字号 */
+  --card-studio-size: 12px; /* 工作室署名字号 */
+  --nav-accent: #e87925; /* 目录选中颜色 */
+  --page-background: #fafaf8;
+  --text-color: #20211e;
+  --work-pagination-font-size: 18px; /* prev / next 字号：以后直接改这里 */
+}
+
+/* ===== 05 首页滚轮外观：保持左对齐，中心最大 ===== */
+.category-wheel {
+  --wheel-scale: 1; /* 滚轮整体缩放：字号、行距、指针一起缩放，1.1 = 放大10% */
+  --wheel-text-color: #161616; /* 滚轮基础文字颜色 */
+  --wheel-font-family: 'Georgia', Georgia, serif; /* 字体 */
+  --wheel-font-size: 30px; /* 电脑端字号 */
+  --wheel-font-decay: .25; /* 字号衰减力度：0 不缩小，越大越明显 */
+  --wheel-font-min-scale: .65; /* 最小字号 / 中心字号：.65 = 中心的 65% */
+  --wheel-font-weight: 400; /* 字重 */
+  --wheel-letter-spacing: 0em; /* 字间距 */
+  --wheel-row-height: 64px; /* 每行高度，也就是选项中心间距 */
+  --wheel-width: 475px; /* 整个滚轮最大宽度 */
+  --wheel-offset-x: 0px; /* 滚轮左右偏移：正数向右 */
+  --wheel-offset-y: 0px; /* 滚轮上下偏移：正数向下 */
+  --wheel-edge-opacity: .12; /* 远离选中项的文字透明度下限 */
+  --wheel-opacity-decay: 1.6; /* 越大，相邻选项越淡；建议 1–2 */
+  --wheel-fade-edge: 30%; /* 上下边缘渐隐范围 */
+  --wheel-pointer-offset-x: -35px; /* 指针横向位置，负数在文字左侧 */
+  --wheel-pointer-size: 7px; /* 指针大小 */
+  --wheel-pointer-color: #161616; /* 指针颜色 */
+  --wheel-click-color: #ed791c; /* 点击时的橙色 */
+  --wheel-hover-color: #ed791c; /* 鼠标悬停标签时的橙色 */
+  --wheel-mobile-font-size: clamp(18px, 5vw, 24px); /* 手机端字号 */
+  --wheel-mobile-row-height: 58px; /* 手机端行距 */
+}
+
+/* ===== 06 平板 / 手机覆盖：同名参数以这里为准 ===== */
+
+/* 01 首页位置、标题与全站联系图标 */
+@media (max-width: 700px) {
+  :root {
+    --home-title-font-size: 42px;
+    --home-character-scale: 1;
+    --home-title-top-gap: 24px;
+    --home-title-bottom-gap: 4px;
+    --home-hero-min-height: 360px;
+    --home-hero-column-gap: 40px; /* 手机端小人和滚轮两列间距 */
+    --home-mobile-character-size: 1.5; /* 手机小人大小：1.5=当前大小，增大数值继续放大 */
+    --home-character-width: calc(100% * var(--home-mobile-character-size));
+    --home-hero-padding: 12px 14px 0 4px;
+    --home-character-offset-x: calc((1 - var(--home-mobile-character-size)) * 50%); /* 放大后自动保持在原列中心 */
+    --home-hero-offset-y: 0px; /* 手机端整体上下移动 */
+    --intro-offset-x: 0px; /* 手机端取消电脑端右移，避免横向溢出 */
+    --intro-offset-y: 0px;
+    --showreel-gap: 24px;
+    --showreel-font-size: 12px;
+    --showreel-padding: 12px 14px;
+    --home-social-size: 48px;
+    --home-social-art-size: 40px;
+    --home-social-gap: 10px;
+    --home-social-top-gap: 4px;
+    --home-social-bottom-space: 32px;
+  }
+}
+
+/* 04 Projects、分区、作品详情与页底 */
+@media (max-width: 1100px) {
+  :root {
+    --gallery-row-height: 220px;
+    --gallery-min-items: 2;
+    --gallery-max-items: 3;
+    --category-gallery-row-height: 300px;
+    --category-gallery-small-items: 2;
+    --category-gallery-items: 2;
+    --category-gallery-dense-items: 3;
+    --sidebar-width: var(--sidebar-tablet-width);
+    --page-padding: 22px;
+    --card-title-size: 20px;
+  }
+}
+
+/* 04 Projects、分区、作品详情与页底 */
+@media (max-width: 700px) {
+  :root {
+    --category-gallery-use-custom: 0;
+  }
+}
+
+/* 04 Projects、分区、作品详情与页底 */
+@media (max-width: 700px) {
+  :root {
+    --gallery-row-height: 160px;
+    --overview-gallery-use-custom: 0; /* 手机自动排版，保留保存的作品顺序 */
+    --gallery-mobile-columns: 2; /* 手机每行两张；奇数末张保留半行宽度 */
+    --gallery-min-items: 2;
+    --gallery-max-items: 2;
+    --category-gallery-row-height: 160px;
+    --category-gallery-small-items: 2;
+    --category-gallery-items: 2;
+    --category-gallery-dense-items: 2;
+    --gallery-gap: 10px;
+    --page-padding: 16px;
+    --card-title-size: 16px;
+    --card-studio-size: 10px;
+    --breadcrumbs-font-size: var(--breadcrumbs-mobile-font-size);
+    --work-mobile-text-scale: .5; /* 手机帖子字号倍率；1=原字号，.5=一半 */
+    --work-mobile-text-min: 10px; /* 小字号下限，避免正文过小 */
+    --work-mobile-media-height: min(60svh, 480px); /* 长竖图的最大显示高度，等比缩放 */
+    --work-title-font-size: var(--work-title-mobile-font-size);
+    --work-credit-font-size: 12px;
+    --work-summary-font-size: 12px;
+    --portfolio-list-footer-gap: 80px;
+    --work-caption-font-size: 8px;
+    --work-summary-content-gap: 24px;
+  }
+}
+
+/* 首页人物手机高度 */
+@media (max-width: 700px) {
+  :root {
+    --home-character-height: clamp(340px, 56svh, 480px); /* 手机端人物显示区域高度 */
+  }
+}
+
+/* 首页滚轮手机参数 */
+@media (max-width: 700px) {
+  .category-wheel {
+    --wheel-scale: 1; /* 手机滚轮整体缩放，独立于电脑端 */
+    --wheel-mobile-font-size: clamp(13px, 4vw, 20px);
+    --wheel-mobile-row-height: 44px;
+    --wheel-pointer-offset-x: -12px;
+    --wheel-pointer-size: 5px;
+    --wheel-row-height: var(--wheel-mobile-row-height);
+    --wheel-font-size: var(--wheel-mobile-font-size);
+  }
+}

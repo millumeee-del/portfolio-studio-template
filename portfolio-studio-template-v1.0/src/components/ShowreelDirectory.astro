@@ -1,0 +1,37 @@
+---
+import PortfolioLayout from '../layouts/PortfolioLayout.astro';
+import { directoryShowreels as showreels } from '../data/portfolio';
+import '../styles/showreel.css';
+import '../styles/showreel-directory.css';
+import settings from '../data/showreels.json';
+import ShowreelEditor from '../components/ShowreelEditor.astro';
+---
+<PortfolioLayout title="SHOWREEL" current="showreel" showreelDirectory>
+  <section class="showreel-directory" aria-labelledby="showreel-directory-title">
+    <header class="showreel-directory-header">
+      <h1 id="showreel-directory-title" data-i18n-zh={settings.title} data-i18n-en={settings.titleEn}>{settings.title}</h1>
+      <p data-i18n-zh={settings.hint} data-i18n-en={settings.hintEn}>{settings.hint}</p>
+    </header>
+    <div class="showreel-arc" data-showreel-arc tabindex="0" role="group" aria-label="Showreel 年份选择">
+      <div class="showreel-arc-line" aria-hidden="true"></div>
+      {showreels.map((reel,index)=><span class:list={['showreel-arc-dot',{'is-selected':index===0}]} data-reel-dot={reel.year} aria-hidden="true"/>)}
+      {showreels.map((reel,index)=><a class:list={['showreel-arc-card',{'is-selected':index===0}]} style={`--arc-initial:${index===2?-1:index}`} data-reel-card data-year={reel.year} href={`/showreel/watch/?year=${reel.year}`}>
+        <span class="showreel-arc-image"><img src={reel.poster} width="1280" height="720" alt="" draggable="false" fetchpriority={index===0?'high':'auto'} /></span>
+        <span class="showreel-arc-copy"><span class="showreel-arc-year" data-no-translate>{reel.label}</span><span class="showreel-arc-description" data-i18n-zh={reel.description} data-i18n-en={reel.descriptionEn}>{reel.description}</span></span>
+      </a>)}
+    </div>
+    <div class="showreel-directory-controls">
+      <span class="showreel-directory-count" data-no-translate>03 REELS</span>
+      <div><button type="button" data-reel-step="-1" aria-label="上一个年份"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 15 7-7 7 7"/></svg></button><span data-reel-selection role="status" aria-live="polite" data-no-translate>2026</span><button type="button" data-reel-step="1" aria-label="下一个年份"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 9 7 7 7-7"/></svg></button></div>
+    </div>
+    {import.meta.env.DEV&&<ShowreelEditor />}
+  </section>
+</PortfolioLayout>
+<script>
+  import {mountShowreelDirectory} from '../scripts/showreel-directory.js';
+  let dispose:(()=>void)|undefined;
+  function initialize(){dispose?.();const node=document.querySelector<HTMLElement>('[data-showreel-arc]');dispose=node?mountShowreelDirectory(node):undefined;}
+  initialize();document.addEventListener('astro:page-load',initialize);
+  const cleanup=()=>{dispose?.();dispose=undefined;};document.addEventListener('astro:before-swap',cleanup);
+  if(import.meta.hot)import.meta.hot.dispose(()=>{cleanup();document.removeEventListener('astro:page-load',initialize);document.removeEventListener('astro:before-swap',cleanup);});
+</script>

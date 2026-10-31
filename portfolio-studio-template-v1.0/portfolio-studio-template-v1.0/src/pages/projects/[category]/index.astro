@@ -1,0 +1,17 @@
+---
+import PortfolioLayout from '../../../layouts/PortfolioLayout.astro';
+import WorksGrid from '../../../components/WorksGrid.astro';
+import ProjectBreadcrumbs from '../../../components/ProjectBreadcrumbs.astro';
+import { categories, works } from '../../../data/portfolio';
+import GalleryEditor from '../../../components/GalleryEditor.astro';
+export function getStaticPaths() {
+  return categories.map(category => ({ params: { category: category.slug }, props: { category } }));
+}
+const { category } = Astro.props;
+const categoryWorks = works.filter(work => work.category === category.slug);
+---
+<PortfolioLayout title={category.label} category={category.slug}>
+  <ProjectBreadcrumbs category={category}><span class="project-count">{String(categoryWorks.length).padStart(2, '0')} WORKS</span></ProjectBreadcrumbs>
+  {import.meta.env.DEV && categoryWorks.length > 0 && <GalleryEditor category={category.slug} />}
+  <WorksGrid works={categoryWorks} variant="category" category={category.slug} />
+</PortfolioLayout>

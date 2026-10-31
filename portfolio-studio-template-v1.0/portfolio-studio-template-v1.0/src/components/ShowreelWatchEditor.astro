@@ -1,0 +1,31 @@
+<section data-showreel-layout-editor data-no-translate aria-label="播放器排版编辑器">
+  <button type="button" class="reel-layout-entry" data-reel-layout-open>编辑播放器排版</button>
+  <div class="reel-layout-toolbar" data-reel-layout-toolbar hidden>
+    <strong data-reel-layout-device>拖动年份框</strong>
+    <button type="button" data-reel-layout-reset>恢复默认</button>
+    <button type="button" data-reel-layout-cancel>退出编辑</button>
+    <button type="button" data-reel-layout-save>保存位置</button>
+    <span data-reel-layout-status role="status"></span>
+  </div>
+  <div class="reel-layout-box" data-reel-layout-box hidden tabindex="0" role="group" aria-label="年份导航拖动框"><span>年份导航 · 上下整行移动</span></div>
+  <div class="reel-layout-guide" data-reel-layout-guide hidden></div>
+</section>
+<style>
+.reel-layout-entry,.reel-layout-toolbar{position:fixed;right:24px;bottom:20px;z-index:70;background:#fff8ed;border:1px solid #d6cbbd;border-radius:5px;color:#8c551f;font:12px/1.5 Arial,sans-serif;padding:8px 12px;}
+.reel-layout-entry{cursor:pointer}.reel-layout-toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:8px;max-width:calc(100vw - 32px)}
+.reel-layout-toolbar[hidden],.reel-layout-box[hidden],.reel-layout-guide[hidden]{display:none}
+.reel-layout-toolbar button{border:1px solid #d6cbbd;border-radius:4px;padding:6px 10px;background:#fff;color:inherit;cursor:pointer;font:inherit}.reel-layout-toolbar button:disabled{opacity:.5}
+.reel-layout-toolbar span{flex-basis:100%}.reel-layout-box{position:fixed;z-index:65;border:1px dashed #e87925;background:#e8792508;cursor:grab;touch-action:none;user-select:none;outline:none;pointer-events:auto}
+.reel-layout-box.is-dragging,.reel-layout-box.is-dragging>span{cursor:grabbing}
+.reel-layout-box>span{position:absolute;bottom:100%;left:-1px;white-space:nowrap;padding:2px 5px;background:#fff8ed;border:1px solid #e87925;color:#8c551f;font:11px/1.5 Arial,sans-serif;pointer-events:auto;cursor:grab;touch-action:none}
+.reel-layout-guide{position:fixed;z-index:66;top:0;bottom:0;width:1px;background:#e87925;pointer-events:none}
+@media(max-width:700px){.reel-layout-entry,.reel-layout-toolbar{right:12px;bottom:14px}}
+</style>
+<script>
+  import {mountShowreelWatchEditor} from '../scripts/showreel-watch-editor.js';
+  let dispose:(()=>void)|undefined;
+  function mount(){dispose?.();dispose=mountShowreelWatchEditor();}
+  mount();document.addEventListener('astro:page-load',mount);
+  const cleanup=()=>dispose?.();document.addEventListener('astro:before-swap',cleanup);
+  if(import.meta.hot)import.meta.hot.dispose(()=>{dispose?.();document.removeEventListener('astro:page-load',mount);document.removeEventListener('astro:before-swap',cleanup);});
+</script>

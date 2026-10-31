@@ -1,0 +1,54 @@
+/* 每个年份占一屏；视频居中于侧栏右侧的可用区域。 */
+.showreel-page { height:100svh; overflow:hidden; display:flex; flex-direction:column; }
+.showreel-page .site-nav { flex-shrink:0; }
+.showreel-page .portfolio-main { flex:1; min-height:0; padding:0; }
+.showreel-page .portfolio-content { display:flex; min-height:0; }
+.showreel-page .portfolio-page-end { margin-top:0; }
+.showreel-watch {
+  --reel-toolbar-top-gap:24px; /* 返回/年份这一行上方的留白 */
+  --reel-toolbar-title-gap:clamp(24px,3vw,24px); /* 返回/年份行与大标题之间的间距，可改成 24px 等 */
+  --reel-toolbar-font-size:18px; /* 左侧返回目录与右侧年份字号：原来 12px */
+  display:flex; flex-direction:column; width:100%; min-height:0; min-width:0;
+}
+.showreel-watch-toolbar { display:flex; flex-wrap:nowrap; justify-content:space-between; align-items:baseline; gap:20px; flex-shrink:0; padding:var(--reel-toolbar-top-gap) clamp(20px,3vw,48px) 4px; font-size:var(--reel-toolbar-font-size); color:#77796f; }
+.showreel-watch-toolbar>a { text-decoration:none; color:#3f4138; white-space:nowrap; }.showreel-watch-toolbar>a:hover { color:#e87925; }
+.showreel-watch-toolbar nav { display:flex; gap:14px; margin-left:auto; }
+.showreel-watch-toolbar button { appearance:none; padding:5px 0; background:none; border:0; border-bottom:1px solid transparent; color:inherit; cursor:pointer; font-size:inherit; }
+.showreel-watch-toolbar button[aria-current] { color:#e87925; border-bottom-color:currentColor; }
+.showreel-scroller {
+  --reel-padding:clamp(16px,3vw,48px);
+  --reel-title-size:clamp(26px,4vw,72px);
+  --reel-gap:clamp(16px,2.4vw,32px);
+  flex:1; min-width:0; min-height:0; position:relative; container-type:size;
+  overflow-y:auto; overflow-x:hidden; scroll-snap-type:y mandatory;
+  scroll-behavior:auto; overscroll-behavior:contain; scrollbar-width:thin; overflow-anchor:none;
+}
+.showreel-scroller.is-transitioning { scroll-snap-type:none; }
+.showreel-scroller:focus-visible { outline:1px solid #ee713b; outline-offset:-2px; }
+.showreel-panel { height:100%; padding:var(--reel-padding); padding-top:var(--reel-toolbar-title-gap); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:var(--reel-gap); scroll-snap-align:start; scroll-snap-stop:always; }
+.showreel-title { margin:0; font-size:var(--reel-title-size); font-weight:400; line-height:1.1; letter-spacing:-.045em; text-align:center; white-space:nowrap; }
+.showreel-page .showreel-player { margin:0; width:100%; max-width:none; flex-shrink:0; display:flex; justify-content:center; background:none; }
+.showreel-page .showreel-player video {
+  --reel-video-height:calc(100cqh - var(--reel-toolbar-title-gap) - var(--reel-padding) - var(--reel-title-size)*1.1 - var(--reel-gap));
+  width:min(100%,1600px,calc(var(--reel-video-height)*16/9)); height:auto; aspect-ratio:16/9;
+  object-fit:contain; background:#111;
+}
+@media(max-width:700px) {
+  .showreel-watch { --reel-toolbar-top-gap:14px; --reel-toolbar-title-gap:16px; }
+  .showreel-page .portfolio-sidebar { flex-shrink:0; }
+  .showreel-page .portfolio-sidebar.is-open { max-height:45svh; overflow:auto; }
+  .showreel-scroller { --reel-padding:16px; --reel-title-size:clamp(25px,6vw,36px); --reel-gap:18px; }
+  .showreel-watch-toolbar { padding:var(--reel-toolbar-top-gap) 20px 4px; gap:12px; font-size:min(var(--reel-toolbar-font-size),5.3vw); }
+  .showreel-watch-toolbar nav { gap:8px; }
+}
+/* 横屏和矮窗口优先留出视频高度，联系方式仍然保留。 */
+@media(max-height:500px) {
+  .showreel-watch { --reel-toolbar-top-gap:8px; --reel-toolbar-title-gap:8px; }
+  .showreel-scroller { --reel-padding:12px; --reel-title-size:24px; --reel-gap:12px; }
+  .showreel-page:not(.showreel-directory-page) .home-socials { padding-bottom:8px; }
+  .showreel-page:not(.showreel-directory-page) .social-list {
+    width:auto; height:auto; margin-left:0;
+    --home-social-size:36px; --home-social-art-size:30px;
+    --home-social-gap:10px; --home-social-radius:7px;
+  }
+}

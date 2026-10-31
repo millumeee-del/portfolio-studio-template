@@ -1,0 +1,275 @@
+
+---
+import {site} from '../data/site.js';
+import CategoryWheel from '../components/CategoryWheel.astro';
+import SiteNav from '../components/SiteNav.astro';
+import SocialIcons from '../components/SocialIcons.astro';
+import HomeLayoutEditor from '../components/HomeLayoutEditor.astro';
+import MoodGuestbook from '../components/MoodGuestbook.astro';
+import LanguageHead from '../components/LanguageHead.astro';
+import {applyHomeLayout,mountHomeLayout} from '../lib/home-layout.js';
+import {readHomeLayouts} from '../lib/home-layout.server.js';
+import { resolveCharacterAssets } from '../lib/character-assets.server.js';
+import { getCharacterPoster, mountCharacterPosterSizing } from '../lib/character-preview.js';
+import { selectHomeModel } from '../lib/home-model-choice.js';
+import '../styles/home.css';
+import '../styles/home-layout.css';
+const homeLayouts=readHomeLayouts();
+const layoutBootstrap='('+mountHomeLayout.toString()+')(document.querySelector("[data-home-canvas]"),'+applyHomeLayout.toString()+');';
+const siteName = site.name;
+const CHARACTER_MODELS = resolveCharacterAssets();
+const posterBootstrap = `(() => {
+  const models = ${JSON.stringify(CHARACTER_MODELS).replace(/</g, '\\u003c')};
+  let index = 0;
+  try { index = (${selectHomeModel.toString()})(models, sessionStorage, String(performance.timeOrigin)); } catch {}
+  let source = models[index].poster;
+  document.documentElement.dataset.characterPosterModel = models[index].id;
+  try { source = (${getCharacterPoster.toString()})(models[index], localStorage); } catch {}
+  document.documentElement.style.setProperty('--character-poster-image', source ? 'url(' + JSON.stringify(source) + ')' : 'none');
+  if (source && !source.startsWith('data:')) {
+    const preload = document.createElement('link');
+    preload.rel = 'preload'; preload.as = 'image'; preload.href = source; preload.fetchPriority = 'high';
+    document.head.append(preload);
+  }
+  const model = document.createElement('link');
+  model.rel = 'preload'; model.as = 'fetch'; model.crossOrigin = 'anonymous'; model.href = models[index].src;
+  document.head.append(model);
+  if (models[index].faceDirectory && models[index].faceDirectory !== 'none') {
+    const prefix = models[index].faceTexturePrefix || 'face';
+    const files = [models[index].faceDirectory + '/face-overlay.json', ...(models[index].faceTextures || [models[index].faceDirectory + '/' + prefix + '_01.png', models[index].faceDirectory + '/' + prefix + '_02.png'])];
+    for (const filename of files) {
+      const face = document.createElement('link'); face.rel = 'preload';
+      face.as = filename.endsWith('.json') ? 'fetch' : 'image'; face.crossOrigin = 'anonymous';
+      face.href = filename + '?v=' + models[index].revision; document.head.append(face);
+    }
+  }
+})();`;
+const posterSizingBootstrap = '('+mountCharacterPosterSizing.toString()+')(document.currentScript.previousElementSibling,JSON.parse(document.currentScript.previousElementSibling.dataset.characterModels).find(model=>model.id===document.documentElement.dataset.characterPosterModel));';
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{siteName} | Portfolio</title>
+    <LanguageHead />
+    <script is:inline set:html={posterBootstrap} />
+  </head>
+
+  <body>
+    <SiteNav active="home" />
+
+    <main>
+      <h1>{siteName}</h1>
+
+      <section class="hero" data-home-canvas data-home-layouts={JSON.stringify(homeLayouts)}>
+        <div
+          class="character"
+          data-character-stage
+          data-character-models={JSON.stringify(CHARACTER_MODELS)}
+          data-model-src={CHARACTER_MODELS[0].src}
+          data-animation-name={CHARACTER_MODELS[0].animationName}
+          data-animation-url={CHARACTER_MODELS[0].animationUrl}
+          data-face-directory={CHARACTER_MODELS[0].faceDirectory}
+          data-face-texture-prefix={CHARACTER_MODELS[0].faceTexturePrefix || 'face'}
+          data-face-textures={JSON.stringify(CHARACTER_MODELS[0].faceTextures || null)}
+          role="img"
+          aria-label="studio 3D 人物：拖动或按左右方向键旋转，人物会轻微跟随鼠标"
+          tabindex="0"
+        >
+          <div class="character-poster" data-character-poster aria-hidden="true"></div>
+          <span class="character-status" role="status" hidden></span>
+        </div>
+        <script is:inline set:html={posterSizingBootstrap} />
+
+        <div class="character-model-picker" data-home-model-picker role="group" aria-label="人物模型切换">
+          <button type="button" class="character-model-dot" data-model-next aria-label="切换下一个模型" title="点击切换下一个模型"></button>
+        </div>
+
+        <div class="intro">
+          <CategoryWheel />
+          <a href="/showreel/" class="button"><svg class="play-icon" viewBox="0 0 12 14" aria-hidden="true"><path d="M1 1 11 7 1 13Z" fill="currentColor"/></svg> SHOWREEL</a>
+        </div>
+      </section>
+    </main>
+
+    <SocialIcons editable />
+    <script is:inline set:html={layoutBootstrap} />
+    {import.meta.env.DEV && <HomeLayoutEditor />}
+    <MoodGuestbook />
+
+    <style>
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        overflow-x: clip;
+        min-height: 100vh;
+        background: var(--page-background);
+        color: var(--home-text-color);
+        font-family: var(--site-font-family);
+      }
+
+      h1 {
+        text-align: center;
+        font-size: var(--home-title-font-size);
+        margin: var(--home-title-top-gap) 0 var(--home-title-bottom-gap);
+        letter-spacing: var(--home-title-letter-spacing);
+      }
+
+      .hero {
+        max-width: var(--home-hero-max-width);
+        min-height: var(--home-hero-min-height);
+        margin: var(--home-hero-offset-y) auto 0;
+        display: grid;
+        grid-template-columns: 1.2fr 1fr;
+        align-items: center;
+        gap: var(--home-hero-column-gap);
+        padding: var(--home-hero-padding);
+      }
+
+	  .character {
+		height: var(--home-character-height);
+		width: var(--home-character-width, 100%);
+		position: relative;
+		top: var(--home-character-offset-y);
+		left: var(--home-character-offset-x);
+		transform: scale(var(--home-character-scale));
+		transform-origin: center;
+		overflow: hidden;
+	  }
+
+		.character :global(canvas) {
+		width: 100%;
+		height: 100%;
+		display: block;
+		background: transparent;
+		touch-action: pan-y;
+		cursor: grab;
+		}
+
+      .character :global(canvas:active) {
+        cursor: grabbing;
+      }
+
+      .character:focus,
+      .character:focus-visible {
+        outline: none;
+      }
+
+      .character-status {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        color: #666;
+        pointer-events: none;
+        font-size: 13px;
+      }
+
+      .character-status[hidden] {
+        display: none;
+      }
+
+      .character-poster {
+        position: absolute; inset: 0; z-index: 1; pointer-events: none;
+        background-color: var(--page-background); opacity: 1;
+        background-image: var(--character-poster-image, none);
+        background-position: center; background-repeat: no-repeat; background-size: auto calc(100% * var(--character-poster-scale, 1));
+        transition: opacity calc(var(--home-character-handoff-ms) * 1ms) linear;
+      }
+      .character-poster.is-handing-off { opacity: 0; }
+      .character-poster[hidden] { display: none; }
+      .character-status { z-index: 2; }
+      .character-model-picker {
+        position: absolute; z-index: 4;
+        left: var(--home-model-picker-left); top: var(--home-model-picker-top);
+        width: var(--home-model-picker-width); height: var(--home-model-picker-height);
+        display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
+        padding: 0; border: 0; background: none;
+      }
+      .character-model-dot {
+        flex: 0 0 auto; display: grid; place-items: center;
+        width: 100%; height: max(32px, calc(24px * var(--home-model-picker-scale, 1))); padding: 0; border: 0; background: none; appearance:none; -webkit-appearance:none;
+        cursor: pointer; touch-action: manipulation;
+      }
+      .character-model-dot::before {
+        content: ''; width: calc(var(--home-model-dot-size) * var(--home-model-picker-scale, 1)); height: calc(var(--home-model-dot-size) * var(--home-model-picker-scale, 1));
+        border: 1px solid #a9ada4; border-radius: 50%; box-sizing: border-box;
+        background: var(--home-model-switch-color-3); transition: transform .15s;
+      }
+      .character-model-dot[data-model-color="0"]::before { background: var(--home-model-switch-color-1); }
+      .character-model-dot[data-model-color="1"]::before { background: var(--home-model-switch-color-2); }
+      .character-model-dot:hover::before { transform: scale(1.1); }
+      .character-model-dot:focus-visible { outline: 2px solid #ed791c; outline-offset: 2px; }
+      @media (prefers-reduced-motion: reduce) { .character-poster { transition: none; } }
+
+      .character p {
+        font-size: 100px;
+        margin: 0 0 15px;
+      }
+
+      .intro {
+        /* 位置参数集中在 src/styles/site-settings.css。 */
+        min-width: 0;
+        font-size: clamp(22px, 2.5vw, 34px);
+        font-weight: 600;
+        position: relative;
+        left: var(--intro-offset-x);
+        top: var(--intro-offset-y);
+      }
+
+      .button {
+        display: inline-block;
+        margin-top: var(--showreel-gap);
+        margin-left: 0;
+        background: var(--showreel-background);
+        color: #151515;
+        padding: var(--showreel-padding);
+        border-radius: var(--showreel-radius);
+        text-decoration: none;
+        font-size: var(--showreel-font-size);
+        letter-spacing: .02em;
+      }
+
+      .button { box-shadow:0 5px 0 #c5910b,0 9px 14px #9b6c001a; }
+      .button:hover { background: #f3bd0e; }
+      .button:focus-visible { outline: 2px solid #151515; outline-offset: 5px; }
+      .play-icon { margin-right: 9px; width:10px; height:12px; flex-shrink:0; }
+
+      @media (max-width: 700px) {
+        .hero { width:calc(100% - 40px); grid-template-columns: minmax(0, .9fr) minmax(0, 1.2fr); }
+        .character { height: var(--home-character-height); }
+        .intro { text-align: left; }
+        .button { margin-left: 0; margin-bottom: 0; }
+      }
+    </style>
+  </body>
+
+<script>
+  import { mountHomeCharacter } from '../scripts/home-character.js';
+
+  let dispose: (() => void) | undefined;
+  function initializeCharacter() {
+    dispose?.();
+    const stage = document.querySelector<HTMLElement>('[data-character-stage]');
+    const switcher = document.querySelector<HTMLElement>('[data-home-model-picker]');
+    dispose = stage ? mountHomeCharacter(stage, switcher) : undefined;
+  }
+  function disposeCharacter() {
+    dispose?.();
+    dispose = undefined;
+  }
+  initializeCharacter();
+  document.addEventListener('astro:page-load', initializeCharacter);
+  document.addEventListener('astro:before-swap', disposeCharacter);
+  if (import.meta.hot) {
+    import.meta.hot.dispose(() => {
+      disposeCharacter();
+      document.removeEventListener('astro:page-load', initializeCharacter);
+      document.removeEventListener('astro:before-swap', disposeCharacter);
+    });
+  }
+</script>
+</html>

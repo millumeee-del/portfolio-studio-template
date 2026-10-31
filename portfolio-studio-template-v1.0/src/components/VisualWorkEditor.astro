@@ -1,0 +1,44 @@
+---
+import type { Work } from '../data/portfolio';
+import { workUrl } from '../data/portfolio';
+import WorkPlaceholder from './WorkPlaceholder.astro';
+import '../styles/visual-work-editor.css';
+import '../styles/work-canvas.css';
+import '../styles/work-embed.css';
+interface Props { work: Work; }
+const { work }=Astro.props;
+---
+<div class="visual-work-editor" data-visual-editor data-category={work.category} data-slug={work.slug}>
+  {(['orbit','ribbon','bloom','wave','type','grid'] as const).map(variant => <template data-placeholder={variant}><WorkPlaceholder variant={variant} /></template>)}
+  <header class="canvas-toolbar">
+    <div class="canvas-toolbar-start">
+      <label class="canvas-add-label"><span class="sr-only">添加内容</span><select data-add-tool aria-label="添加内容"><option value="">＋ 添加</option><option value="image">图片 / GIF 框</option><option value="video">视频框</option><option value="text">文字框</option><option value="spacer">留白框</option></select></label>
+      <button type="button" data-select-tool class="is-active">选择</button>
+      <button type="button" data-undo disabled title="Ctrl / ⌘ + Z">撤销</button>
+      <button type="button" data-redo disabled title="Ctrl / ⌘ + Shift + Z">重做</button>
+      <label class="canvas-snap"><input type="checkbox" data-snap checked />吸附</label>
+      <label class="canvas-snap"><input type="checkbox" data-spacing-guides checked />间距引导</label>
+    </div>
+    <div class="canvas-toolbar-end">
+      <select data-view aria-label="预览设备"><option value="desktop">电脑排版</option><option value="mobile">手机预览</option></select>
+      <button type="button" data-info>作品信息</button>
+      <a href={workUrl(work)}>查看作品</a>
+      <button type="button" class="canvas-save" data-save disabled>保存到项目</button>
+    </div>
+  </header>
+  <div class="canvas-status-row"><p role="status" data-status>正在载入画布…</p><span data-zoom></span></div>
+  <div class="canvas-workspace">
+    <section class="canvas-scroll" data-canvas-scroll aria-label="可视化作品画布">
+      <div class="canvas-paper" data-paper>
+        <header class="canvas-work-heading"><h1 data-inline-field="title" contenteditable="plaintext-only" aria-label="作品标题"></h1><p data-inline-field="studio" contenteditable="plaintext-only" aria-label="工作室署名"></p><p class="canvas-summary" data-inline-field="summary" contenteditable="plaintext-only" aria-label="作品简介" data-empty-label="点击输入作品简介"></p></header>
+        <div class="canvas-stage" data-stage><div class="work-canvas editor-artboard" data-artboard tabindex="0" aria-label="拖动绘制或选择内容框"></div></div>
+      </div>
+      <button type="button" class="canvas-extend" data-extend>＋ 延长编辑画布</button>
+    </section>
+    <aside class="canvas-inspector" data-inspector aria-label="选中内容的属性"></aside>
+  </div>
+  <input type="file" data-media-file hidden />
+  <input type="file" data-cover-file accept="image/gif,image/png,image/jpeg,image/webp,image/avif" hidden />
+  <input type="file" data-embed-poster-file accept="image/gif,image/png,image/jpeg,image/webp,image/avif" hidden />
+</div>
+<script>import { mountVisualWorkEditor } from '../scripts/visual-work-editor.js'; mountVisualWorkEditor();</script>
